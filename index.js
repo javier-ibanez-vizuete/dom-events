@@ -123,6 +123,8 @@ const recalcularLikes = () => {
  * DOMContentLoaded es una función que se ejecugará automáticamente cuando el navegador haya renderizado el HTML correctamente.
  * Este evento lo disparará el objeto "document" de manera automática.
  * Por lo tanto, dentro del evento DOMContentLoaded se invocarán todas las funciones necesarias para que la web funcione.
+ * Como por ejemplo, la primera llamada a renderCatalogo() para que esta función se ejecute y renderice la primera vez
+ * las card para cada serie.
  *
  * Deberás hacer:
  *   - Seleccionar elementos:
