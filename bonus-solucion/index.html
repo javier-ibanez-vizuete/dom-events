@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Catálogo Interactivo</title>
+        <link rel="stylesheet" href="styles.css" />
+        <script src="index.js" defer></script>
+    </head>
+    <body>
+        <h1>Catálogo Interactivo</h1>
+
+        <div class="tabs">
+            <button id="tab-catalogo" class="btn-tab">Catálogo</button>
+            <button id="tab-favoritos" class="btn-tab">Favoritos</button>
+            <button id="tab-likes" class="btn-tab">Gustadas</button>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="input-buscar" placeholder="Buscar serie/película..." />
+            <button id="btn-buscar" class="btn">Buscar</button>
+            <button id="btn-oscuro" class="btn">Modo Oscuro</button>
+        </div>
+
+        <div class="counters-section">
+            <p>Favoritos: <span id="total-favoritos">0</span></p>
+            <p>Likes: <span id="total-likes">0</span></p>
+        </div>
+
+        <div class="add-series-form">
+            <h2>Añadir Nueva Serie</h2>
+            <input type="text" id="input-nueva-serie" placeholder="Nombre de la serie..." />
+            <button id="btn-add-serie" class="btn">Agregar al Catálogo</button>
+        </div>
+
+        <div id="catalogo"></div>
+    </body>
+</html>
