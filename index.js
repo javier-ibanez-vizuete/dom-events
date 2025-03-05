@@ -104,7 +104,7 @@ const renderCatalogo = (filtroTexto = "") => {
 		const tituloSerie = serie.titulo.toLowerCase();
 		const textoFiltradoMinusculas = filtroTexto.toLowerCase();
 		if (filtroTexto.length > 0 && tituloSerie.includes(textoFiltradoMinusculas)) {
-			console.log("SERIE FILTRADA =>", serie); //PRUEBA TEXTO
+			// console.log("SERIE FILTRADA =>", serie); //PRUEBA TEXTO
 			return serie;
 		}
 		if (filtroTexto.length === 0) {
@@ -139,17 +139,17 @@ const renderCatalogo = (filtroTexto = "") => {
 	if (divSerieFiltrada.length > 0) {
 		divSerieFiltrada.forEach((card) => {
 			card.addEventListener("mouseover", () => {
-                // console.log("RATON entra en tarjeta");
+				// console.log("RATON entra en tarjeta");
 				card.style.transform = "translateY(-6px)";
 			});
 
 			card.addEventListener("mouseout", () => {
-                // console.log("RATON sale de tarjeta");
+				// console.log("RATON sale de tarjeta");
 				card.style.transform = "translateY(0)";
 			});
 
 			card.addEventListener("dblclick", () => {
-                console.log("Doble click sobre la tarjeta");
+				console.log("Doble click sobre la tarjeta");
 				alert(`Doble click en => ${card.querySelector("h3").textContent}`);
 			});
 
@@ -160,12 +160,12 @@ const renderCatalogo = (filtroTexto = "") => {
 						catalogoSeries.forEach((serie) => {
 							if (serie.titulo === card.querySelector("h3").textContent) {
 								if (!serie.favorito) {
-                                    console.log("Favorito Activado");
+									console.log("Favorito Activado");
 									serie.favorito = true;
 									card.classList.add("favorito-activo");
 									boton.textContent = "Quitar Favorito";
 								} else {
-                                    console.log("Favorito Desactivado");
+									console.log("Favorito Desactivado");
 									serie.favorito = false;
 									card.classList.remove("favorito-activo");
 									boton.textContent = "Favorito";
@@ -182,18 +182,20 @@ const renderCatalogo = (filtroTexto = "") => {
 						catalogoSeries.forEach((serie) => {
 							if (serie.titulo === card.querySelector("h3").textContent) {
 								if (!serie.liked) {
-                                    console.log("Like Activado");
+									console.log("Like Activado");
 									serie.liked = true;
 									boton.classList.toggle("like-activo");
 									card.classList.toggle("like-activo");
 								} else {
-                                    console.log("Like Desactivado");
+									console.log("Like Desactivado");
 									serie.liked = false;
 									boton.classList.toggle("like-activo");
 									card.classList.toggle("like-activo");
 								}
 							}
 						});
+
+						recalcularLikes();
 					});
 				}
 			});
@@ -201,26 +203,27 @@ const renderCatalogo = (filtroTexto = "") => {
 	}
 };
 
-
 /**
  * 3) FUNCIÓN: recalcularFavoritos()
  *    OBJETIVO:
  *      - Contar cuántos elementos de catalogoSeries tienen favorito = true
  *      - Mostrar ese número en el <span id="total-favoritos">.textContent
-*/
+ */
 const recalcularFavoritos = () => {
-    // Implementar aquí
-    const spanFavoritos = document.querySelector("#total-favoritos");
-    const numeroDeFavoritos = catalogoSeries.reduce((acc, serie) => {
-        if (serie.favorito) {
-            acc++;
-        }
-        return acc;
-    }, 0);
-    spanFavoritos.textContent = numeroDeFavoritos;
+	// Implementar aquí
+	const spanFavoritos = document.querySelector("#total-favoritos");
+	const numeroDeFavoritos = catalogoSeries.reduce((acc, serie) => {
+		if (serie.favorito) {
+			acc++;
+		}
+		return acc;
+	}, 0);
+	if (spanFavoritos) {
+		spanFavoritos.textContent = numeroDeFavoritos;
+	}
 };
 
-renderCatalogo("");
+
 
 /**
  * 4) FUNCIÓN: recalcularLikes()
@@ -230,7 +233,20 @@ renderCatalogo("");
  */
 const recalcularLikes = () => {
 	// Implementar aquí
+	const spanLikes = document.querySelector("#total-likes");
+	const numeroDeLikes = catalogoSeries.reduce((acc, serie) => {
+		if (serie.liked) {
+			acc++;
+		}
+		return acc;
+	}, 0);
+
+	if (spanLikes) {
+		spanLikes.textContent = numeroDeLikes;
+	}
 };
+
+
 
 /**
  * 5) EVENTOS PRINCIPALES en DOMContentLoaded
@@ -255,17 +271,24 @@ const recalcularLikes = () => {
  */
 document.addEventListener("DOMContentLoaded", () => {
 	// Implementar la inicialización de eventos y las llamadas iniciales
+    const btnBuscar = document.getElementById("btn-buscar");
+    const inputBuscar = document.getElementById("input-buscar");
+    const btnOscuro = document.getElementById("btn-oscuro");
+
+    btnBuscar.addEventListener("click", () => {
+        renderCatalogo(inputBuscar.value);
+    })
+    
+    inputBuscar.addEventListener("keyup", () => {
+        renderCatalogo(inputBuscar.value);
+    })
+
+    btnOscuro.addEventListener("click", () => {
+        document.body.classList.toggle("modo-oscuro");
+    })
+
+    renderCatalogo("");
+
+    recalcularFavoritos();
+    recalcularLikes();
 });
-// PONER DENTRO DEL EVENTO LUEGO
-// *      6) Añadir eventos click a los botones:
-// *          - Click en "Favorito":   alterna serie.favorito = !serie.favorito. Es decir, modifica el array de catalogoSeries
-// *                        si serie.favorito = true, haz => card.classList.add("favorito-activo")
-// *                        si está a false, haz => card.classList.remove("favorito-activo")
-// *                        actualizar texto del botón ( "Quitar Favorito" / "Añadir Favorito" )
-// *                        llamar a recalcularFavoritos() (se define esta función más adelante)
-// *
-// *          - Click en "Like":       alterna serie.liked = !serie.liked
-// *                        toggle .like-activo en el BOTÓN y en la tarjeta
-// *                        card.classList.toggle("like-activo")
-// *                        btnLike.classList.toggle("like-activo")
-// *                        llamar a recalcularLikes()
