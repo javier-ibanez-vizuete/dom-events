@@ -1,28 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Catálogo Interactivo - Ejercicio</title>
-        <link rel="stylesheet" href="styles.css" />
-        <script src="index.js" defer></script>
-    </head>
-    <body>
-        <h1>Catálogo Interactivo - Ejercicio</h1>
 
-        <!-- Barra de búsqueda -->
-        <div class="search-bar">
-            <input type="text" id="input-buscar" placeholder="Buscar serie/película..." />
-            <button id="btn-buscar" class="btn">Buscar</button>
-            <button id="btn-oscuro" class="btn">Modo Oscuro</button>
-        </div>
+<head>
+    <meta charset="UTF-8" />
+    <title>Catálogo Interactivo - Ejercicio</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="index.js" defer></script>
+</head>
 
-        <!-- Muestra totales de Favoritos y Likes -->
-        <div class="counters-section">
-            <p>Favoritos: <span id="total-favoritos">0</span></p>
-            <p>Likes: <span id="total-likes">0</span></p>
-        </div>
+<body>
+    <h1>Catálogo Interactivo - Ejercicio</h1>
+<!-- Barra para añadir series nuevas-->
+    <div class="add-series-bar">
+        <form action="#s" method="get">
+            <input type="text" name="input-new-serie" id="input-new-serie" placeholder="Añadir serie...">
+            <button id="btn-añadir" class="btn">Añadir Serie</button>
+        </form>
+    </div>
+    <!-- Barra de búsqueda -->
+    <div class="search-bar">
+        <input type="text" id="input-buscar" placeholder="Buscar serie/película..." />
+        <button id="btn-buscar" class="btn">Buscar</button>
+        <button id="btn-oscuro" class="btn">Modo Oscuro</button>
+    </div>
 
-        <!-- Contenedor principal para el catálogo -->
-        <div id="catalogo"></div>
-    </body>
+    <!-- Muestra totales de Favoritos y Likes -->
+    <div class="counters-section">
+        <p>Favoritos: <span id="total-favoritos">0</span></p>
+        <p>Likes: <span id="total-likes">0</span></p>
+    </div>
+
+    <!-- Contenedor principal para el catálogo -->
+    <div id="catalogo"></div>
+</body>
+
 </html>

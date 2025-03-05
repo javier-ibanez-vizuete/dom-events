@@ -223,8 +223,6 @@ const recalcularFavoritos = () => {
 	}
 };
 
-
-
 /**
  * 4) FUNCIÓN: recalcularLikes()
  *    OBJETIVO:
@@ -246,7 +244,119 @@ const recalcularLikes = () => {
 	}
 };
 
+/**
+ *  FORMULARIO PARA AÑADIR SERIES AL LISTADO!
+ * 1-CREAR UNA FUNCION QUE AÑADA UN OBJETO NUEVO AL LISTADO ANTIGUO.
+ * 2-ESE OBJETO TIENE QUE TENER DE FORMA PREDETERMINADA FAVORITOS: TRUE / FALSE Y LIKED: TRUE O FALSE;
+ */
+const añadirSerie = (serieNueva = "") => {
+	const divCatalogo = document.querySelector("#catalogo");
+	if (divCatalogo) {
+		divCatalogo.innerHTML = "";
+	}
+	const nuevaSerie = { titulo: serieNueva, favorito: false, liked: false };
+	for (let serie of catalogoSeries) {
+		if (serie.titulo.toLowerCase() === nuevaSerie.titulo.trim().toLocaleLowerCase()) {
+			alert("La serie introducida ya existe. Introduzca una nueva!");
+			break;
+		}
+		if (serie.titulo !== nuevaSerie.titulo) {
+			catalogoSeries.unshift(nuevaSerie);
+			break;
+		}
+	}
 
+	if (catalogoSeries.length > 0) {
+		catalogoSeries.forEach((serie) => {
+			const divSerieContainer = document.createElement("div");
+			divSerieContainer.classList.add("catalog-card");
+			divCatalogo.append(divSerieContainer);
+
+			const h3Serie = document.createElement("h3");
+			h3Serie.textContent = serie.titulo;
+			divSerieContainer.append(h3Serie);
+
+			const buttonFavSerie = document.createElement("button");
+			buttonFavSerie.classList.add("btn");
+			buttonFavSerie.textContent = "Favorito";
+			divSerieContainer.append(buttonFavSerie);
+
+			const buttonLikeSerie = document.createElement("button");
+			buttonLikeSerie.classList.add("btn");
+			buttonLikeSerie.textContent = "Like";
+			divSerieContainer.append(buttonLikeSerie);
+		});
+	}
+
+	const divSerieFiltrada = document.querySelectorAll("div.catalog-card");
+	if (divSerieFiltrada.length > 0) {
+		divSerieFiltrada.forEach((card) => {
+			card.addEventListener("mouseover", () => {
+				// console.log("RATON entra en tarjeta");
+				card.style.transform = "translateY(-6px)";
+			});
+
+			card.addEventListener("mouseout", () => {
+				// console.log("RATON sale de tarjeta");
+				card.style.transform = "translateY(0)";
+			});
+
+			card.addEventListener("dblclick", () => {
+				console.log("Doble click sobre la tarjeta");
+				alert(`Doble click en => ${card.querySelector("h3").textContent}`);
+			});
+
+			const botonesSeriesFiltradas = card.querySelectorAll("button.btn");
+			botonesSeriesFiltradas.forEach((boton) => {
+				if (boton.textContent.toLowerCase().includes("favorito")) {
+					boton.addEventListener("click", () => {
+						catalogoSeries.forEach((serie) => {
+							if (serie.titulo === card.querySelector("h3").textContent) {
+								if (!serie.favorito) {
+									console.log("Favorito Activado");
+									serie.favorito = true;
+									card.classList.add("favorito-activo");
+									boton.textContent = "Quitar Favorito";
+								} else {
+									console.log("Favorito Desactivado");
+									serie.favorito = false;
+									card.classList.remove("favorito-activo");
+									boton.textContent = "Favorito";
+								}
+							}
+						});
+
+						recalcularFavoritos();
+					});
+				}
+
+				if (boton.textContent.toLowerCase().includes("like")) {
+					boton.addEventListener("click", () => {
+						catalogoSeries.forEach((serie) => {
+							if (serie.titulo === card.querySelector("h3").textContent) {
+								if (!serie.liked) {
+									console.log("Like Activado");
+									serie.liked = true;
+									boton.classList.toggle("like-activo");
+									card.classList.toggle("like-activo");
+								} else {
+									console.log("Like Desactivado");
+									serie.liked = false;
+									boton.classList.toggle("like-activo");
+									card.classList.toggle("like-activo");
+								}
+							}
+						});
+
+						recalcularLikes();
+					});
+				}
+			});
+		});
+	}
+
+	return catalogoSeries;
+};
 
 /**
  * 5) EVENTOS PRINCIPALES en DOMContentLoaded
@@ -271,24 +381,31 @@ const recalcularLikes = () => {
  */
 document.addEventListener("DOMContentLoaded", () => {
 	// Implementar la inicialización de eventos y las llamadas iniciales
-    const btnBuscar = document.getElementById("btn-buscar");
-    const inputBuscar = document.getElementById("input-buscar");
-    const btnOscuro = document.getElementById("btn-oscuro");
+	const btnAñadirSerie = document.getElementById("btn-añadir");
+	const inputAñadirSerie = document.getElementById("input-new-serie");
+	const btnBuscar = document.getElementById("btn-buscar");
+	const inputBuscar = document.getElementById("input-buscar");
+	const btnOscuro = document.getElementById("btn-oscuro");
 
-    btnBuscar.addEventListener("click", () => {
-        renderCatalogo(inputBuscar.value);
-    })
-    
-    inputBuscar.addEventListener("keyup", () => {
-        renderCatalogo(inputBuscar.value);
-    })
+	btnAñadirSerie.addEventListener("click", (event) => {
+		event.preventDefault();
+		añadirSerie(inputAñadirSerie.value);
+	});
 
-    btnOscuro.addEventListener("click", () => {
-        document.body.classList.toggle("modo-oscuro");
-    })
+	btnBuscar.addEventListener("click", () => {
+		renderCatalogo(inputBuscar.value);
+	});
 
-    renderCatalogo("");
+	inputBuscar.addEventListener("keyup", () => {
+		renderCatalogo(inputBuscar.value);
+	});
 
-    recalcularFavoritos();
-    recalcularLikes();
+	btnOscuro.addEventListener("click", () => {
+		document.body.classList.toggle("modo-oscuro");
+	});
+
+	renderCatalogo("");
+
+	recalcularFavoritos();
+	recalcularLikes();
 });
