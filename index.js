@@ -24,36 +24,36 @@
  *    { titulo: "texto", favorito: boolean, liked: boolean }
  */
 let catalogoSeries = [
-    { titulo: "Breaking Bad", favorito: false, liked: false },
-    { titulo: "Stranger Things", favorito: false, liked: false },
-    { titulo: "The Witcher", favorito: false, liked: false },
-    { titulo: "Better Call Saul", favorito: false, liked: false },
-    { titulo: "La Casa de Papel", favorito: false, liked: false },
-    { titulo: "Dark", favorito: false, liked: false },
-    { titulo: "The Crown", favorito: false, liked: false },
-    { titulo: "Peaky Blinders", favorito: false, liked: false },
-    { titulo: "Game of Thrones", favorito: false, liked: false },
-    { titulo: "The Mandalorian", favorito: false, liked: false },
-    { titulo: "The Boys", favorito: false, liked: false },
-    { titulo: "Lucifer", favorito: false, liked: false },
-    { titulo: "Ozark", favorito: false, liked: false },
-    { titulo: "Mindhunter", favorito: false, liked: false },
-    { titulo: "Narcos", favorito: false, liked: false },
-    { titulo: "Oz", favorito: false, liked: false },
-    { titulo: "Vikings", favorito: false, liked: false },
-    { titulo: "Sherlock", favorito: false, liked: false },
-    { titulo: "House of Cards", favorito: false, liked: false },
-    { titulo: "Westworld", favorito: false, liked: false },
-    { titulo: "Homeland", favorito: false, liked: false },
-    { titulo: "The Walking Dead", favorito: false, liked: false },
-    { titulo: "Fargo", favorito: false, liked: false },
-    { titulo: "Mr. Robot", favorito: false, liked: false },
-    { titulo: "The Haunting of Hill House", favorito: false, liked: false },
-    { titulo: "The Expanse", favorito: false, liked: false },
-    { titulo: "Rick and Morty", favorito: false, liked: false },
-    { titulo: "BoJack Horseman", favorito: false, liked: false },
-    { titulo: "Arrested Development", favorito: false, liked: false },
-    { titulo: "Lupin", favorito: false, liked: false },
+	{ titulo: "Breaking Bad", favorito: false, liked: false },
+	{ titulo: "Stranger Things", favorito: false, liked: false },
+	{ titulo: "The Witcher", favorito: false, liked: false },
+	{ titulo: "Better Call Saul", favorito: false, liked: false },
+	{ titulo: "La Casa de Papel", favorito: false, liked: false },
+	{ titulo: "Dark", favorito: false, liked: false },
+	{ titulo: "The Crown", favorito: false, liked: false },
+	{ titulo: "Peaky Blinders", favorito: false, liked: false },
+	{ titulo: "Game of Thrones", favorito: false, liked: false },
+	{ titulo: "The Mandalorian", favorito: false, liked: false },
+	{ titulo: "The Boys", favorito: false, liked: false },
+	{ titulo: "Lucifer", favorito: false, liked: false },
+	{ titulo: "Ozark", favorito: false, liked: false },
+	{ titulo: "Mindhunter", favorito: false, liked: false },
+	{ titulo: "Narcos", favorito: false, liked: false },
+	{ titulo: "Oz", favorito: false, liked: false },
+	{ titulo: "Vikings", favorito: false, liked: false },
+	{ titulo: "Sherlock", favorito: false, liked: false },
+	{ titulo: "House of Cards", favorito: false, liked: false },
+	{ titulo: "Westworld", favorito: false, liked: false },
+	{ titulo: "Homeland", favorito: false, liked: false },
+	{ titulo: "The Walking Dead", favorito: false, liked: false },
+	{ titulo: "Fargo", favorito: false, liked: false },
+	{ titulo: "Mr. Robot", favorito: false, liked: false },
+	{ titulo: "The Haunting of Hill House", favorito: false, liked: false },
+	{ titulo: "The Expanse", favorito: false, liked: false },
+	{ titulo: "Rick and Morty", favorito: false, liked: false },
+	{ titulo: "BoJack Horseman", favorito: false, liked: false },
+	{ titulo: "Arrested Development", favorito: false, liked: false },
+	{ titulo: "Lupin", favorito: false, liked: false },
 ];
 
 /**
@@ -94,8 +94,8 @@ let catalogoSeries = [
  *  Tienes que Implementar todos estos pasos dentro de la función renderCatalogo que está definida aquí:
  */
 const renderCatalogo = (filtroTexto = "") => {
-    // Implementar aquí
-};
+	// Implementar aquí
+}
 
 /**
  * 3) FUNCIÓN: recalcularFavoritos()
@@ -104,7 +104,7 @@ const renderCatalogo = (filtroTexto = "") => {
  *      - Mostrar ese número en el <span id="total-favoritos">.textContent
  */
 const recalcularFavoritos = () => {
-    // Implementar aquí
+	// Implementar aquí
 };
 
 /**
@@ -114,7 +114,7 @@ const recalcularFavoritos = () => {
  *      - Mostrar ese número en el <span id="total-likes">.textContent
  */
 const recalcularLikes = () => {
-    // Implementar aquí
+	// Implementar aquí
 };
 
 /**
@@ -139,5 +139,18 @@ const recalcularLikes = () => {
  *   - Llamamos a recalcularFavoritos() y recalcularLikes() para iniciar contadores
  */
 document.addEventListener("DOMContentLoaded", () => {
-    // Implementar la inicialización de eventos y las llamadas iniciales
+	// Implementar la inicialización de eventos y las llamadas iniciales
 });
+// PONER DENTRO DEL EVENTO LUEGO
+// *      6) Añadir eventos click a los botones:
+// *          - Click en "Favorito":   alterna serie.favorito = !serie.favorito. Es decir, modifica el array de catalogoSeries
+// *                        si serie.favorito = true, haz => card.classList.add("favorito-activo")
+// *                        si está a false, haz => card.classList.remove("favorito-activo")
+// *                        actualizar texto del botón ( "Quitar Favorito" / "Añadir Favorito" )
+// *                        llamar a recalcularFavoritos() (se define esta función más adelante)
+// *
+// *          - Click en "Like":       alterna serie.liked = !serie.liked
+// *                        toggle .like-activo en el BOTÓN y en la tarjeta
+// *                        card.classList.toggle("like-activo")
+// *                        btnLike.classList.toggle("like-activo")
+// *                        llamar a recalcularLikes()
