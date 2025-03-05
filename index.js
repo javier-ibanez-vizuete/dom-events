@@ -95,8 +95,114 @@ let catalogoSeries = [
  */
 const renderCatalogo = (filtroTexto = "") => {
 	// Implementar aquí
-}
+	const divCatalogo = document.querySelector("#catalogo");
+	if (divCatalogo) {
+		divCatalogo.innerHTML = "";
+	}
 
+	const catalogoFiltrado = catalogoSeries.filter((serie) => {
+		const tituloSerie = serie.titulo.toLowerCase();
+		const textoFiltradoMinusculas = filtroTexto.toLowerCase();
+		if (filtroTexto.length > 0 && tituloSerie.includes(textoFiltradoMinusculas)) {
+			console.log("SERIE FILTRADA =>", serie); //PRUEBA TEXTO
+			return serie;
+		}
+		if (filtroTexto.length === 0) {
+			// console.log("SERIE FILTRADA TEXTO VACIO =>", serie); //PRUEBA TEXTO VACIO
+			return serie;
+		}
+	});
+
+	if (catalogoFiltrado.length > 0) {
+		catalogoFiltrado.forEach((serie) => {
+			const divSerieContainer = document.createElement("div");
+			divSerieContainer.classList.add("catalog-card");
+			divCatalogo.append(divSerieContainer);
+
+			const h3Serie = document.createElement("h3");
+			h3Serie.textContent = serie.titulo;
+			divSerieContainer.append(h3Serie);
+
+			const buttonFavSerie = document.createElement("button");
+			buttonFavSerie.classList.add("btn");
+			buttonFavSerie.textContent = "Favorito";
+			divSerieContainer.append(buttonFavSerie);
+
+			const buttonLikeSerie = document.createElement("button");
+			buttonLikeSerie.classList.add("btn");
+			buttonLikeSerie.textContent = "Like";
+			divSerieContainer.append(buttonLikeSerie);
+		});
+	}
+
+	const divSerieFiltrada = document.querySelectorAll("div.catalog-card");
+	if (divSerieFiltrada.length > 0) {
+		divSerieFiltrada.forEach((card) => {
+			card.addEventListener("mouseover", () => {
+                // console.log("RATON entra en tarjeta");
+				card.style.transform = "translateY(-6px)";
+			});
+
+			card.addEventListener("mouseout", () => {
+                // console.log("RATON sale de tarjeta");
+				card.style.transform = "translateY(0)";
+			});
+
+			card.addEventListener("dblclick", () => {
+                console.log("Doble click sobre la tarjeta");
+				alert(`Doble click en => ${card.querySelector("h3").textContent}`);
+			});
+
+			const botonesSeriesFiltradas = card.querySelectorAll("button.btn");
+			botonesSeriesFiltradas.forEach((boton) => {
+				if (boton.textContent.toLowerCase().includes("favorito")) {
+					boton.addEventListener("click", () => {
+						catalogoSeries.forEach((serie) => {
+							if (serie.titulo === card.querySelector("h3").textContent) {
+								if (!serie.favorito) {
+                                    console.log("Favorito Activado");
+									serie.favorito = true;
+									card.classList.add("favorito-activo");
+									boton.textContent = "Quitar Favorito";
+								} else {
+                                    console.log("Favorito Desactivado");
+									serie.favorito = false;
+									card.classList.remove("favorito-activo");
+									boton.textContent = "Favorito";
+								}
+							}
+						});
+
+						recalcularFavoritos();
+					});
+				}
+
+				if (boton.textContent.toLowerCase().includes("like")) {
+					boton.addEventListener("click", () => {
+						catalogoSeries.forEach((serie) => {
+							if (serie.titulo === card.querySelector("h3").textContent) {
+								if (!serie.liked) {
+                                    console.log("Like Activado");
+									serie.liked = true;
+									boton.classList.toggle("like-activo");
+									card.classList.toggle("like-activo");
+								} else {
+                                    console.log("Like Desactivado");
+									serie.liked = false;
+									boton.classList.toggle("like-activo");
+									card.classList.toggle("like-activo");
+								}
+							}
+						});
+					});
+				}
+			});
+		});
+	}
+};
+
+
+renderCatalogo("");
 /**
  * 3) FUNCIÓN: recalcularFavoritos()
  *    OBJETIVO:
