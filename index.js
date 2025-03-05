@@ -202,16 +202,25 @@ const renderCatalogo = (filtroTexto = "") => {
 };
 
 
-renderCatalogo("");
 /**
  * 3) FUNCIÓN: recalcularFavoritos()
  *    OBJETIVO:
  *      - Contar cuántos elementos de catalogoSeries tienen favorito = true
  *      - Mostrar ese número en el <span id="total-favoritos">.textContent
- */
+*/
 const recalcularFavoritos = () => {
-	// Implementar aquí
+    // Implementar aquí
+    const spanFavoritos = document.querySelector("#total-favoritos");
+    const numeroDeFavoritos = catalogoSeries.reduce((acc, serie) => {
+        if (serie.favorito) {
+            acc++;
+        }
+        return acc;
+    }, 0);
+    spanFavoritos.textContent = numeroDeFavoritos;
 };
+
+renderCatalogo("");
 
 /**
  * 4) FUNCIÓN: recalcularLikes()
