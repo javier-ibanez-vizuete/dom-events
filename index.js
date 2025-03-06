@@ -61,7 +61,7 @@ if (!localStorage.getItem("catalogoSeries")) {
 }
 // console.log("DESPUES DE LA NUBE =>", localStorage.getItem("catalogoSeries"));
 let listadoSeriesEnLaNube = JSON.parse(localStorage.getItem("catalogoSeries"));
-
+console.log("QUE VALE LISTADO SERIES EN LA NUBE ", listadoSeriesEnLaNube);
 
 /**
  * 2) FUNCIÓN: renderCatalogo(filtroTexto)
@@ -124,6 +124,12 @@ const renderCatalogo = (filtroTexto = "") => {
 		catalogoFiltrado.forEach((serie) => {
 			const divSerieContainer = document.createElement("div");
 			divSerieContainer.classList.add("catalog-card");
+			if (serie.liked) {
+				divSerieContainer.classList.add("like-activo");
+			}
+			if (serie.favorito) {
+				divSerieContainer.classList.add("favorito-activo");
+			}
 			divCatalogo.append(divSerieContainer);
 
 			const h3Serie = document.createElement("h3");
@@ -132,12 +138,20 @@ const renderCatalogo = (filtroTexto = "") => {
 
 			const buttonFavSerie = document.createElement("button");
 			buttonFavSerie.classList.add("btn");
-			buttonFavSerie.textContent = "Favorito";
+			if (serie.favorito) {
+				buttonFavSerie.textContent = "Quitar Favorito";
+			} else {
+				buttonFavSerie.textContent = "Favorito";
+			}
 			divSerieContainer.append(buttonFavSerie);
 
 			const buttonLikeSerie = document.createElement("button");
 			buttonLikeSerie.classList.add("btn");
-			buttonLikeSerie.textContent = "Like";
+			if (serie.liked) {
+				buttonLikeSerie.classList.add("like-activo");
+			}
+			buttonLikeSerie.textContent = serie.liked ? "Liked" : "Like";
+
 			divSerieContainer.append(buttonLikeSerie);
 		});
 	}
@@ -164,19 +178,20 @@ const renderCatalogo = (filtroTexto = "") => {
 			botonesSeriesFiltradas.forEach((boton) => {
 				if (boton.textContent.toLowerCase().includes("favorito")) {
 					boton.addEventListener("click", () => {
-						listadoSeriesEnLaNube.forEach((serie) => {
-							if (serie.titulo === card.querySelector("h3").textContent) {
-								if (!serie.favorito) {
+						listadoSeriesEnLaNube.forEach((serieNube) => {
+							if (serieNube.titulo === card.querySelector("h3").textContent) {
+								if (!serieNube.favorito) {
 									console.log("Favorito Activado");
-									serie.favorito = true;
+									serieNube.favorito = true;
 									card.classList.add("favorito-activo");
 									boton.textContent = "Quitar Favorito";
 								} else {
 									console.log("Favorito Desactivado");
-									serie.favorito = false;
+									serieNube.favorito = false;
 									card.classList.remove("favorito-activo");
 									boton.textContent = "Favorito";
 								}
+								localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
 							}
 						});
 
@@ -186,19 +201,22 @@ const renderCatalogo = (filtroTexto = "") => {
 
 				if (boton.textContent.toLowerCase().includes("like")) {
 					boton.addEventListener("click", () => {
-						listadoSeriesEnLaNube.forEach((serie) => {
-							if (serie.titulo === card.querySelector("h3").textContent) {
-								if (!serie.liked) {
+						listadoSeriesEnLaNube.forEach((serieNube) => {
+							if (serieNube.titulo === card.querySelector("h3").textContent) {
+								if (!serieNube.liked) {
 									console.log("Like Activado");
-									serie.liked = true;
-									boton.classList.toggle("like-activo");
-									card.classList.toggle("like-activo");
+									serieNube.liked = true;
+									boton.classList.add("like-activo");
+									boton.textContent = "Liked";
+									card.classList.add("like-activo");
 								} else {
 									console.log("Like Desactivado");
-									serie.liked = false;
-									boton.classList.toggle("like-activo");
-									card.classList.toggle("like-activo");
+									serieNube.liked = false;
+									boton.classList.remove("like-activo");
+									boton.textContent = "Like";
+									card.classList.remove("like-activo");
 								}
+								localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
 							}
 						});
 
@@ -208,6 +226,7 @@ const renderCatalogo = (filtroTexto = "") => {
 			});
 		});
 	}
+	return listadoSeriesEnLaNube;
 };
 
 /**
@@ -256,48 +275,88 @@ const recalcularLikes = () => {
  * 1-CREAR UNA FUNCION QUE AÑADA UN OBJETO NUEVO AL LISTADO ANTIGUO.
  * 2-ESE OBJETO TIENE QUE TENER DE FORMA PREDETERMINADA FAVORITOS: TRUE / FALSE Y LIKED: TRUE O FALSE;
  */
-const añadirSerie = (serieNueva = "") => {
-	const divCatalogo = document.querySelector("#catalogo");
+
+const añadirSerie = (tituloNuevaSerie) => {
+	let nuevaSerie = { titulo: tituloNuevaSerie, favorito: false, liked: false };
+
+	if (tituloNuevaSerie.length === 0) {
+		alert("Porfavor introduzca un titulo antes de añadir");
+	}
+	let tituloNuevaSerieEnMinusculas = "";
+	if (tituloNuevaSerie.length > 0) {
+		tituloNuevaSerieEnMinusculas = tituloNuevaSerie.trim().toLowerCase();
+	}
+	if (listadoSeriesEnLaNube.length > 0) {
+		for (let serie of listadoSeriesEnLaNube) {
+			const tituloSerieExistente = serie.titulo.toLowerCase();
+			if (tituloSerieExistente === tituloNuevaSerieEnMinusculas) {
+				alert("La serie introducida ya existe");
+				break;
+			}
+		}
+		listadoSeriesEnLaNube.forEach((serie, index, array) => {
+			if (index === array.length - 1) {
+				listadoSeriesEnLaNube.unshift(nuevaSerie);
+				localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+			}
+		});
+		console.log("lista De Series en la nube", listadoSeriesEnLaNube);
+	}
+};
+
+/**
+ * AÑADIR SOLO FAVORITOS
+ */
+const seriesFavoritas = () => {
+	const soloSeriesFavoritas = listadoSeriesEnLaNube.filter((serie) => {
+		if (serie.favorito) {
+			return serie;
+		}
+	});
+	const divCatalogo = document.getElementById("catalogo");
 	if (divCatalogo) {
 		divCatalogo.innerHTML = "";
 	}
-	const nuevaSerie = { titulo: serieNueva, favorito: false, liked: false };
-	for (let serie of listadoSeriesEnLaNube) {
-		if (serie.titulo.toLowerCase() === nuevaSerie.titulo.trim().toLocaleLowerCase()) {
-			alert("La serie introducida ya existe. Introduzca una nueva!");
-			break;
-		}
-		if (serie.titulo !== nuevaSerie.titulo) {
-			listadoSeriesEnLaNube.unshift(nuevaSerie);
-			break;
-		}
-	}
 
-	if (catalogoSeries.length > 0) {
-		listadoSeriesEnLaNube.forEach((serie) => {
-			const divSerieContainer = document.createElement("div");
-			divSerieContainer.classList.add("catalog-card");
-			divCatalogo.append(divSerieContainer);
+	if (soloSeriesFavoritas.length > 0) {
+		soloSeriesFavoritas.forEach((serie) => {
+			const divSerieFavoritaContainer = document.createElement("div");
+			divSerieFavoritaContainer.classList.add("catalog-card");
+			if (serie.liked) {
+				divSerieFavoritaContainer.classList.add("like-activo");
+			}
+			if (serie.favorito) {
+				divSerieFavoritaContainer.classList.add("favorito-activo");
+			}
+			divCatalogo.append(divSerieFavoritaContainer);
 
 			const h3Serie = document.createElement("h3");
 			h3Serie.textContent = serie.titulo;
-			divSerieContainer.append(h3Serie);
+			divSerieFavoritaContainer.append(h3Serie);
 
 			const buttonFavSerie = document.createElement("button");
 			buttonFavSerie.classList.add("btn");
-			buttonFavSerie.textContent = "Favorito";
-			divSerieContainer.append(buttonFavSerie);
+			if (serie.favorito) {
+				buttonFavSerie.textContent = "Quitar Favorito";
+			} else {
+				buttonFavSerie.textContent = "Favorito";
+			}
+			divSerieFavoritaContainer.append(buttonFavSerie);
 
 			const buttonLikeSerie = document.createElement("button");
 			buttonLikeSerie.classList.add("btn");
-			buttonLikeSerie.textContent = "Like";
-			divSerieContainer.append(buttonLikeSerie);
+			if (serie.liked) {
+				buttonLikeSerie.classList.add("like-activo");
+			}
+			buttonLikeSerie.textContent = serie.liked ? "Liked" : "Like";
+
+			divSerieFavoritaContainer.append(buttonLikeSerie);
 		});
 	}
 
-	const divSerieFiltrada = document.querySelectorAll("div.catalog-card");
-	if (divSerieFiltrada.length > 0) {
-		divSerieFiltrada.forEach((card) => {
+	const containerSerieFavorita = document.querySelectorAll("div.catalog-card")
+	if (containerSerieFavorita.length > 0) {
+		containerSerieFavorita.forEach((card) => {
 			card.addEventListener("mouseover", () => {
 				// console.log("RATON entra en tarjeta");
 				card.style.transform = "translateY(-6px)";
@@ -317,19 +376,20 @@ const añadirSerie = (serieNueva = "") => {
 			botonesSeriesFiltradas.forEach((boton) => {
 				if (boton.textContent.toLowerCase().includes("favorito")) {
 					boton.addEventListener("click", () => {
-						listadoSeriesEnLaNube.forEach((serie) => {
-							if (serie.titulo === card.querySelector("h3").textContent) {
-								if (!serie.favorito) {
+						listadoSeriesEnLaNube.forEach((serieNube) => {
+							if (serieNube.titulo === card.querySelector("h3").textContent) {
+								if (!serieNube.favorito) {
 									console.log("Favorito Activado");
-									serie.favorito = true;
+									serieNube.favorito = true;
 									card.classList.add("favorito-activo");
 									boton.textContent = "Quitar Favorito";
 								} else {
 									console.log("Favorito Desactivado");
-									serie.favorito = false;
+									serieNube.favorito = false;
 									card.classList.remove("favorito-activo");
 									boton.textContent = "Favorito";
 								}
+								localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
 							}
 						});
 
@@ -339,19 +399,22 @@ const añadirSerie = (serieNueva = "") => {
 
 				if (boton.textContent.toLowerCase().includes("like")) {
 					boton.addEventListener("click", () => {
-						listadoSeriesEnLaNube.forEach((serie) => {
-							if (serie.titulo === card.querySelector("h3").textContent) {
-								if (!serie.liked) {
+						listadoSeriesEnLaNube.forEach((serieNube) => {
+							if (serieNube.titulo === card.querySelector("h3").textContent) {
+								if (!serieNube.liked) {
 									console.log("Like Activado");
-									serie.liked = true;
-									boton.classList.toggle("like-activo");
-									card.classList.toggle("like-activo");
+									serieNube.liked = true;
+									boton.classList.add("like-activo");
+									boton.textContent = "Liked";
+									card.classList.add("like-activo");
 								} else {
 									console.log("Like Desactivado");
-									serie.liked = false;
-									boton.classList.toggle("like-activo");
-									card.classList.toggle("like-activo");
+									serieNube.liked = false;
+									boton.classList.remove("like-activo");
+									boton.textContent = "Like";
+									card.classList.remove("like-activo");
 								}
+								localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
 							}
 						});
 
@@ -360,48 +423,12 @@ const añadirSerie = (serieNueva = "") => {
 				}
 			});
 		});
-	}
 
-	localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
-	return listadoSeriesEnLaNube;
+	}
+	
+	
 };
 
-/**
- * AÑADIR SOLO FAVORITOS
- */
-const filtarSeriesFavoritas = () => {
-	const divCatalogo = document.getElementById("catalogo");
-	if (divCatalogo) {
-		divCatalogo.innerHTML = "";
-	}
-
-	const catalogoFavoritas = listadoSeriesEnLaNube.filter((serie) => {
-		console.log("ESTO ES LO QUE ESTOY BUSCANDO", serie.favorito);
-		if (serie.favorito === true) {
-			return serie;
-		}
-	});
-
-	catalogoFavoritas.forEach((serie) => {
-		const divSerieContainer = document.createElement("div");
-		divSerieContainer.classList.add("catalog-card");
-		divCatalogo.append(divSerieContainer);
-
-		const h3Serie = document.createElement("h3");
-		h3Serie.textContent = serie.titulo;
-		divSerieContainer.append(h3Serie);
-
-		const buttonFavSerie = document.createElement("button");
-		buttonFavSerie.classList.add("btn");
-		buttonFavSerie.textContent = "Favorito";
-		divSerieContainer.append(buttonFavSerie);
-
-		const buttonLikeSerie = document.createElement("button");
-		buttonLikeSerie.classList.add("btn");
-		buttonLikeSerie.textContent = "Like";
-		divSerieContainer.append(buttonLikeSerie);
-	});
-};
 /**
  * 5) EVENTOS PRINCIPALES en DOMContentLoaded
  *
@@ -426,10 +453,10 @@ const filtarSeriesFavoritas = () => {
 document.addEventListener("DOMContentLoaded", () => {
 	// Implementar la inicialización de eventos y las llamadas iniciales
 	// localStorage.setItem("catalogoSeries", "")
-	const btnCatalogoCompleto = document.getElementById("btn-main-screen")
-	const btnCatalogoFavoritas = document.getElementById("btn-fav-screen")
-	const btnCatalogoGustadas = document.getElementById("btn-liked-screen")
-	
+	const btnCatalogoCompleto = document.getElementById("btn-main-screen");
+	const btnCatalogoFavoritas = document.getElementById("btn-fav-screen");
+	const btnCatalogoGustadas = document.getElementById("btn-liked-screen");
+
 	const btnAñadirSerie = document.getElementById("btn-añadir");
 	const inputAñadirSerie = document.getElementById("input-new-serie");
 
@@ -438,29 +465,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const btnOscuro = document.getElementById("btn-oscuro");
 	const busquedaEnCurso = localStorage.getItem("busquedaEnCurso");
-	
+
 	//APARTADO CAMBIAR ENTRE FILTROS
 	btnCatalogoCompleto.addEventListener("click", (event) => {
 		event.preventDefault();
-		renderCatalogo();
-	})
+		renderCatalogo(busquedaEnCurso);
+	});
 
 	btnCatalogoFavoritas.addEventListener("click", (event) => {
 		event.preventDefault();
-		filtarSeriesFavoritas();
-	})
-	
+		seriesFavoritas();
+	});
+
 	// APARTADO DE AÑADIR SERIE
 	btnAñadirSerie.addEventListener("click", (event) => {
 		event.preventDefault();
 		añadirSerie(inputAñadirSerie.value);
-		inputAñadirSerie.value = "";
+		renderCatalogo();
 	});
 
 	// APARTADO DE BUSCAR SERIE (INPUT/BOTON)
 	inputBuscar.value = busquedaEnCurso;
 	inputBuscar.addEventListener("keyup", (event) => {
-
 		localStorage.setItem("busquedaEnCurso", inputBuscar.value);
 		const busquedaEnCurso = localStorage.getItem("busquedaEnCurso");
 		renderCatalogo(busquedaEnCurso);
@@ -473,8 +499,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	btnOscuro.addEventListener("click", () => {
 		document.body.classList.toggle("modo-oscuro");
 	});
-
 	renderCatalogo(busquedaEnCurso);
+	seriesFavoritas();
 	recalcularFavoritos();
 	recalcularLikes();
 });
+
+// console.log("RENDER CATALOGO => ", listadoSeriesEnLaNube);
