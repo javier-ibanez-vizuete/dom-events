@@ -55,6 +55,16 @@ let catalogoSeries = [
 	{ titulo: "Arrested Development", favorito: false, liked: false },
 	{ titulo: "Lupin", favorito: false, liked: false },
 ];
+// console.log("ANTES DE LA NUBE =>", localStorage.getItem("catalogoSeries"));
+if (!localStorage.getItem("catalogoSeries")) {
+	localStorage.setItem("catalogoSeries", JSON.stringify(catalogoSeries));
+}
+// console.log("DESPUES DE LA NUBE =>", localStorage.getItem("catalogoSeries"));
+let listadoSeriesEnLaNube = JSON.parse(localStorage.getItem("catalogoSeries"));
+listadoSeriesEnLaNube.forEach((serie, index) => {
+	console.log(`Serie ${index + 1}`, serie);
+})
+
 
 /**
  * 2) FUNCIÓN: renderCatalogo(filtroTexto)
@@ -100,7 +110,7 @@ const renderCatalogo = (filtroTexto = "") => {
 		divCatalogo.innerHTML = "";
 	}
 
-	const catalogoFiltrado = catalogoSeries.filter((serie) => {
+	const catalogoFiltrado = listadoSeriesEnLaNube.filter((serie) => {
 		const tituloSerie = serie.titulo.toLowerCase();
 		const textoFiltradoMinusculas = filtroTexto.toLowerCase();
 		if (filtroTexto.length > 0 && tituloSerie.includes(textoFiltradoMinusculas)) {
@@ -255,19 +265,19 @@ const añadirSerie = (serieNueva = "") => {
 		divCatalogo.innerHTML = "";
 	}
 	const nuevaSerie = { titulo: serieNueva, favorito: false, liked: false };
-	for (let serie of catalogoSeries) {
+	for (let serie of listadoSeriesEnLaNube) {
 		if (serie.titulo.toLowerCase() === nuevaSerie.titulo.trim().toLocaleLowerCase()) {
 			alert("La serie introducida ya existe. Introduzca una nueva!");
 			break;
 		}
 		if (serie.titulo !== nuevaSerie.titulo) {
-			catalogoSeries.unshift(nuevaSerie);
+			listadoSeriesEnLaNube.unshift(nuevaSerie);
 			break;
 		}
 	}
 
 	if (catalogoSeries.length > 0) {
-		catalogoSeries.forEach((serie) => {
+		listadoSeriesEnLaNube.forEach((serie) => {
 			const divSerieContainer = document.createElement("div");
 			divSerieContainer.classList.add("catalog-card");
 			divCatalogo.append(divSerieContainer);
@@ -355,7 +365,8 @@ const añadirSerie = (serieNueva = "") => {
 		});
 	}
 
-	return catalogoSeries;
+	localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+	return listadoSeriesEnLaNube;
 };
 
 /**
@@ -381,31 +392,42 @@ const añadirSerie = (serieNueva = "") => {
  */
 document.addEventListener("DOMContentLoaded", () => {
 	// Implementar la inicialización de eventos y las llamadas iniciales
+	// localStorage.setItem("catalogoSeries", "")
 	const btnAñadirSerie = document.getElementById("btn-añadir");
 	const inputAñadirSerie = document.getElementById("input-new-serie");
 	const btnBuscar = document.getElementById("btn-buscar");
 	const inputBuscar = document.getElementById("input-buscar");
 	const btnOscuro = document.getElementById("btn-oscuro");
-
+	const busquedaEnCurso = localStorage.getItem("busquedaEnCurso");
+	// APARTADO DE AÑADIR SERIE
 	btnAñadirSerie.addEventListener("click", (event) => {
 		event.preventDefault();
 		añadirSerie(inputAñadirSerie.value);
+		inputAñadirSerie.value = "";
 	});
 
-	btnBuscar.addEventListener("click", () => {
+	// APARTADO DE BUSCAR SERIE (INPUT/BOTON)
+	inputBuscar.value = busquedaEnCurso;
+	inputBuscar.addEventListener("keyup", (event) => {
+		console.log("Event =>", event);
+		console.log("Event.target =>", event.target);
+		console.log("Event.type =>", event.type);
+		console.log("input.value =>", inputBuscar.value);
+
+		localStorage.setItem("busquedaEnCurso", inputBuscar.value);
+		const busquedaEnCurso = localStorage.getItem("busquedaEnCurso");
+		renderCatalogo(busquedaEnCurso);
+	});
+
+	btnBuscar.addEventListener("click", (event) => {
 		renderCatalogo(inputBuscar.value);
 	});
-
-	inputBuscar.addEventListener("keyup", () => {
-		renderCatalogo(inputBuscar.value);
-	});
-
+	// APARTADO DE MODO OSCURO
 	btnOscuro.addEventListener("click", () => {
 		document.body.classList.toggle("modo-oscuro");
 	});
 
-	renderCatalogo("");
-
+	renderCatalogo(busquedaEnCurso);
 	recalcularFavoritos();
 	recalcularLikes();
 });
