@@ -23,6 +23,30 @@ h1 {
 	margin-bottom: 20px;
 	font-weight: 600;
 }
+/*----------------------------------------------------
+		BARRA DE NAVEGACION
+------------------------------------------------------*/
+.navigation-container{
+	display: flex;
+	justify-content: center;
+	margin-bottom: 20px;
+	gap: 8px;
+
+}
+
+.navigation-container .btn {
+	padding: 10px 16px;
+	border: 1px solid #2f80ed;
+	background-color: #2f80ed;
+	color: #fff;
+	cursor: pointer;
+	border-radius: 4px;
+	transition: background-color 0.2s;
+}
+
+.navigation-container .btn:hover {
+	background-color: #1f4ba5;
+}
 
 /* -------------------------------------------------
      BARRA DE BÚSQUEDA
@@ -91,7 +115,7 @@ h1 {
 	transition: background-color 0.2s;
 }
 
-.add-series-bar .btn:focus {
+.add-series-bar .btn:hover {
 	background-color: #1f4ba5;
 }
 

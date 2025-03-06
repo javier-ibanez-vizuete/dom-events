@@ -61,9 +61,6 @@ if (!localStorage.getItem("catalogoSeries")) {
 }
 // console.log("DESPUES DE LA NUBE =>", localStorage.getItem("catalogoSeries"));
 let listadoSeriesEnLaNube = JSON.parse(localStorage.getItem("catalogoSeries"));
-listadoSeriesEnLaNube.forEach((serie, index) => {
-	console.log(`Serie ${index + 1}`, serie);
-})
 
 
 /**
@@ -167,7 +164,7 @@ const renderCatalogo = (filtroTexto = "") => {
 			botonesSeriesFiltradas.forEach((boton) => {
 				if (boton.textContent.toLowerCase().includes("favorito")) {
 					boton.addEventListener("click", () => {
-						catalogoSeries.forEach((serie) => {
+						listadoSeriesEnLaNube.forEach((serie) => {
 							if (serie.titulo === card.querySelector("h3").textContent) {
 								if (!serie.favorito) {
 									console.log("Favorito Activado");
@@ -189,7 +186,7 @@ const renderCatalogo = (filtroTexto = "") => {
 
 				if (boton.textContent.toLowerCase().includes("like")) {
 					boton.addEventListener("click", () => {
-						catalogoSeries.forEach((serie) => {
+						listadoSeriesEnLaNube.forEach((serie) => {
 							if (serie.titulo === card.querySelector("h3").textContent) {
 								if (!serie.liked) {
 									console.log("Like Activado");
@@ -222,7 +219,7 @@ const renderCatalogo = (filtroTexto = "") => {
 const recalcularFavoritos = () => {
 	// Implementar aquí
 	const spanFavoritos = document.querySelector("#total-favoritos");
-	const numeroDeFavoritos = catalogoSeries.reduce((acc, serie) => {
+	const numeroDeFavoritos = listadoSeriesEnLaNube.reduce((acc, serie) => {
 		if (serie.favorito) {
 			acc++;
 		}
@@ -242,7 +239,7 @@ const recalcularFavoritos = () => {
 const recalcularLikes = () => {
 	// Implementar aquí
 	const spanLikes = document.querySelector("#total-likes");
-	const numeroDeLikes = catalogoSeries.reduce((acc, serie) => {
+	const numeroDeLikes = listadoSeriesEnLaNube.reduce((acc, serie) => {
 		if (serie.liked) {
 			acc++;
 		}
@@ -320,7 +317,7 @@ const añadirSerie = (serieNueva = "") => {
 			botonesSeriesFiltradas.forEach((boton) => {
 				if (boton.textContent.toLowerCase().includes("favorito")) {
 					boton.addEventListener("click", () => {
-						catalogoSeries.forEach((serie) => {
+						listadoSeriesEnLaNube.forEach((serie) => {
 							if (serie.titulo === card.querySelector("h3").textContent) {
 								if (!serie.favorito) {
 									console.log("Favorito Activado");
@@ -342,7 +339,7 @@ const añadirSerie = (serieNueva = "") => {
 
 				if (boton.textContent.toLowerCase().includes("like")) {
 					boton.addEventListener("click", () => {
-						catalogoSeries.forEach((serie) => {
+						listadoSeriesEnLaNube.forEach((serie) => {
 							if (serie.titulo === card.querySelector("h3").textContent) {
 								if (!serie.liked) {
 									console.log("Like Activado");
@@ -370,6 +367,42 @@ const añadirSerie = (serieNueva = "") => {
 };
 
 /**
+ * AÑADIR SOLO FAVORITOS
+ */
+const filtarSeriesFavoritas = () => {
+	const divCatalogo = document.getElementById("catalogo");
+	if (divCatalogo) {
+		divCatalogo.innerHTML = "";
+	}
+
+	const catalogoFavoritas = listadoSeriesEnLaNube.filter((serie) => {
+		console.log("ESTO ES LO QUE ESTOY BUSCANDO", serie.favorito);
+		if (serie.favorito === true) {
+			return serie;
+		}
+	});
+
+	catalogoFavoritas.forEach((serie) => {
+		const divSerieContainer = document.createElement("div");
+		divSerieContainer.classList.add("catalog-card");
+		divCatalogo.append(divSerieContainer);
+
+		const h3Serie = document.createElement("h3");
+		h3Serie.textContent = serie.titulo;
+		divSerieContainer.append(h3Serie);
+
+		const buttonFavSerie = document.createElement("button");
+		buttonFavSerie.classList.add("btn");
+		buttonFavSerie.textContent = "Favorito";
+		divSerieContainer.append(buttonFavSerie);
+
+		const buttonLikeSerie = document.createElement("button");
+		buttonLikeSerie.classList.add("btn");
+		buttonLikeSerie.textContent = "Like";
+		divSerieContainer.append(buttonLikeSerie);
+	});
+};
+/**
  * 5) EVENTOS PRINCIPALES en DOMContentLoaded
  *
  * DOMContentLoaded es una función que se ejecugará automáticamente cuando el navegador haya renderizado el HTML correctamente.
@@ -393,12 +426,30 @@ const añadirSerie = (serieNueva = "") => {
 document.addEventListener("DOMContentLoaded", () => {
 	// Implementar la inicialización de eventos y las llamadas iniciales
 	// localStorage.setItem("catalogoSeries", "")
+	const btnCatalogoCompleto = document.getElementById("btn-main-screen")
+	const btnCatalogoFavoritas = document.getElementById("btn-fav-screen")
+	const btnCatalogoGustadas = document.getElementById("btn-liked-screen")
+	
 	const btnAñadirSerie = document.getElementById("btn-añadir");
 	const inputAñadirSerie = document.getElementById("input-new-serie");
+
 	const btnBuscar = document.getElementById("btn-buscar");
 	const inputBuscar = document.getElementById("input-buscar");
+
 	const btnOscuro = document.getElementById("btn-oscuro");
 	const busquedaEnCurso = localStorage.getItem("busquedaEnCurso");
+	
+	//APARTADO CAMBIAR ENTRE FILTROS
+	btnCatalogoCompleto.addEventListener("click", (event) => {
+		event.preventDefault();
+		renderCatalogo();
+	})
+
+	btnCatalogoFavoritas.addEventListener("click", (event) => {
+		event.preventDefault();
+		filtarSeriesFavoritas();
+	})
+	
 	// APARTADO DE AÑADIR SERIE
 	btnAñadirSerie.addEventListener("click", (event) => {
 		event.preventDefault();
@@ -409,10 +460,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	// APARTADO DE BUSCAR SERIE (INPUT/BOTON)
 	inputBuscar.value = busquedaEnCurso;
 	inputBuscar.addEventListener("keyup", (event) => {
-		console.log("Event =>", event);
-		console.log("Event.target =>", event.target);
-		console.log("Event.type =>", event.type);
-		console.log("input.value =>", inputBuscar.value);
 
 		localStorage.setItem("busquedaEnCurso", inputBuscar.value);
 		const busquedaEnCurso = localStorage.getItem("busquedaEnCurso");
