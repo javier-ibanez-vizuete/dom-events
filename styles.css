@@ -26,12 +26,11 @@ h1 {
 /*----------------------------------------------------
 		BARRA DE NAVEGACION
 ------------------------------------------------------*/
-.navigation-container{
+.navigation-container {
 	display: flex;
 	justify-content: center;
 	margin-bottom: 20px;
 	gap: 8px;
-
 }
 
 .navigation-container .btn {
@@ -46,6 +45,15 @@ h1 {
 
 .navigation-container .btn:hover {
 	background-color: #1f4ba5;
+}
+
+.navigation-container .btn-reiniciar {
+	border: 1px solid #ed522f;
+	background-color: #ed6b2f;
+}
+.navigation-container .btn-reiniciar:hover {
+	background-color: #a54c1f;
+
 }
 
 /* -------------------------------------------------
@@ -188,6 +196,22 @@ h1 {
 }
 .catalog-card .btn:hover {
 	background-color: #0288d1;
+}
+
+.catalog-card .btn-eliminar {
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	padding: 4px;
+	background-color: #e60606;
+	border: 2px solid #a10000;
+	border-radius: 4px;
+	font-size: 12px;
+	color: black;
+	transition: background-color 0.2s, border-color 0.2s;
+}
+.catalog-card .btn-eliminar:hover {
+	background-color: #9c0505;
 }
 
 /* -------------------------------------------------

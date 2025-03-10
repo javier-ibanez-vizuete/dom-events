@@ -61,7 +61,7 @@ if (!localStorage.getItem("catalogoSeries")) {
 }
 // console.log("DESPUES DE LA NUBE =>", localStorage.getItem("catalogoSeries"));
 let listadoSeriesEnLaNube = JSON.parse(localStorage.getItem("catalogoSeries"));
-console.log("QUE VALE LISTADO SERIES EN LA NUBE ", listadoSeriesEnLaNube);
+// console.log("QUE VALE LISTADO SERIES EN LA NUBE ", listadoSeriesEnLaNube);
 
 /**
  * 2) FUNCIÓN: renderCatalogo(filtroTexto)
@@ -131,6 +131,11 @@ const renderCatalogo = (filtroTexto = "") => {
 				divSerieContainer.classList.add("favorito-activo");
 			}
 			divCatalogo.append(divSerieContainer);
+			//  AÑADIENDO EL BOTON DE ELIMINAR DEL ARRAY
+			const botoneliminar = document.createElement("button");
+			botoneliminar.classList.add("btn-eliminar");
+			botoneliminar.textContent = "X";
+			divSerieContainer.append(botoneliminar);
 
 			const h3Serie = document.createElement("h3");
 			h3Serie.textContent = serie.titulo;
@@ -170,7 +175,7 @@ const renderCatalogo = (filtroTexto = "") => {
 			});
 
 			card.addEventListener("dblclick", () => {
-				console.log("Doble click sobre la tarjeta");
+				// console.log("Doble click sobre la tarjeta");
 				alert(`Doble click en => ${card.querySelector("h3").textContent}`);
 			});
 
@@ -181,12 +186,12 @@ const renderCatalogo = (filtroTexto = "") => {
 						listadoSeriesEnLaNube.forEach((serieNube) => {
 							if (serieNube.titulo === card.querySelector("h3").textContent) {
 								if (!serieNube.favorito) {
-									console.log("Favorito Activado");
+									// console.log("Favorito Activado");
 									serieNube.favorito = true;
 									card.classList.add("favorito-activo");
 									boton.textContent = "Quitar Favorito";
 								} else {
-									console.log("Favorito Desactivado");
+									// console.log("Favorito Desactivado");
 									serieNube.favorito = false;
 									card.classList.remove("favorito-activo");
 									boton.textContent = "Favorito";
@@ -204,13 +209,13 @@ const renderCatalogo = (filtroTexto = "") => {
 						listadoSeriesEnLaNube.forEach((serieNube) => {
 							if (serieNube.titulo === card.querySelector("h3").textContent) {
 								if (!serieNube.liked) {
-									console.log("Like Activado");
+									// console.log("Like Activado");
 									serieNube.liked = true;
 									boton.classList.add("like-activo");
 									boton.textContent = "Liked";
 									card.classList.add("like-activo");
 								} else {
-									console.log("Like Desactivado");
+									// console.log("Like Desactivado");
 									serieNube.liked = false;
 									boton.classList.remove("like-activo");
 									boton.textContent = "Like";
@@ -224,6 +229,19 @@ const renderCatalogo = (filtroTexto = "") => {
 					});
 				}
 			});
+			//  ELIMINANDO TARJETAS
+			const botonEliminarSerie = card.querySelector("button.btn-eliminar");
+			if (botonEliminarSerie) {
+				botonEliminarSerie.addEventListener("click", () => {
+					listadoSeriesEnLaNube.forEach((serieNube, index) => {
+						if (serieNube.titulo === card.querySelector("h3").textContent) {
+							listadoSeriesEnLaNube.splice(index, 1);
+							localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+							renderCatalogo();
+						}
+					});
+				});
+			}
 		});
 	}
 	return listadoSeriesEnLaNube;
@@ -300,7 +318,7 @@ const añadirSerie = (tituloNuevaSerie) => {
 				localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
 			}
 		});
-		console.log("lista De Series en la nube", listadoSeriesEnLaNube);
+		// console.log("lista De Series en la nube", listadoSeriesEnLaNube);
 	}
 };
 
@@ -329,6 +347,11 @@ const seriesFavoritas = () => {
 				divSerieFavoritaContainer.classList.add("favorito-activo");
 			}
 			divCatalogo.append(divSerieFavoritaContainer);
+			//  BOTON PARA ELIMINAR SERIE DEL ARRAY
+			const botoneliminar = document.createElement("button");
+			botoneliminar.classList.add("btn-eliminar");
+			botoneliminar.textContent = "X";
+			divSerieFavoritaContainer.append(botoneliminar);
 
 			const h3Serie = document.createElement("h3");
 			h3Serie.textContent = serie.titulo;
@@ -349,12 +372,11 @@ const seriesFavoritas = () => {
 				buttonLikeSerie.classList.add("like-activo");
 			}
 			buttonLikeSerie.textContent = serie.liked ? "Liked" : "Like";
-
 			divSerieFavoritaContainer.append(buttonLikeSerie);
 		});
 	}
 
-	const containerSerieFavorita = document.querySelectorAll("div.catalog-card")
+	const containerSerieFavorita = document.querySelectorAll("div.catalog-card");
 	if (containerSerieFavorita.length > 0) {
 		containerSerieFavorita.forEach((card) => {
 			card.addEventListener("mouseover", () => {
@@ -368,7 +390,7 @@ const seriesFavoritas = () => {
 			});
 
 			card.addEventListener("dblclick", () => {
-				console.log("Doble click sobre la tarjeta");
+				// console.log("Doble click sobre la tarjeta");
 				alert(`Doble click en => ${card.querySelector("h3").textContent}`);
 			});
 
@@ -379,15 +401,16 @@ const seriesFavoritas = () => {
 						listadoSeriesEnLaNube.forEach((serieNube) => {
 							if (serieNube.titulo === card.querySelector("h3").textContent) {
 								if (!serieNube.favorito) {
-									console.log("Favorito Activado");
+									// console.log("Favorito Activado");
 									serieNube.favorito = true;
 									card.classList.add("favorito-activo");
 									boton.textContent = "Quitar Favorito";
 								} else {
-									console.log("Favorito Desactivado");
+									// console.log("Favorito Desactivado");
 									serieNube.favorito = false;
 									card.classList.remove("favorito-activo");
 									boton.textContent = "Favorito";
+									card.remove();
 								}
 								localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
 							}
@@ -402,13 +425,13 @@ const seriesFavoritas = () => {
 						listadoSeriesEnLaNube.forEach((serieNube) => {
 							if (serieNube.titulo === card.querySelector("h3").textContent) {
 								if (!serieNube.liked) {
-									console.log("Like Activado");
+									// console.log("Like Activado");
 									serieNube.liked = true;
 									boton.classList.add("like-activo");
 									boton.textContent = "Liked";
 									card.classList.add("like-activo");
 								} else {
-									console.log("Like Desactivado");
+									// console.log("Like Desactivado");
 									serieNube.liked = false;
 									boton.classList.remove("like-activo");
 									boton.textContent = "Like";
@@ -422,11 +445,158 @@ const seriesFavoritas = () => {
 					});
 				}
 			});
-		});
 
+			const botonEliminar = card.querySelector("button.btn-eliminar");
+			if (botonEliminar) {
+				listadoSeriesEnLaNube.forEach((serieNube, index) => {
+					if (serieNube.titulo === card.querySelector("h3").textContent) {
+						botonEliminar.addEventListener("click", () => {
+							console.log("Que mierda de pelicula ", serieNube.titulo);
+							listadoSeriesEnLaNube.splice(index, 1);
+							localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+							seriesFavoritas();
+						});
+					}
+				});
+			}
+		});
 	}
-	
-	
+};
+
+/**
+ *  AÑADIOR SOLO SERIES ME GUSTAN
+ */
+const seriesLiked = () => {
+	const soloSeriesLiked = listadoSeriesEnLaNube.filter((serie) => {
+		if (serie.liked) {
+			// console.log(`La serie en cuestion es ${serie.titulo}`);
+			return serie;
+		}
+	});
+
+	const divCatalogo = document.getElementById("catalogo");
+	if (divCatalogo) {
+		divCatalogo.innerHTML = "";
+	}
+
+	if (soloSeriesLiked.length > 0) {
+		soloSeriesLiked.forEach((serie) => {
+			const divSerieLikedContainer = document.createElement("div");
+			divSerieLikedContainer.classList.add("catalog-card");
+			if (serie.liked) {
+				divSerieLikedContainer.classList.add("like-activo");
+			}
+			if (serie.favorito) {
+				divSerieLikedContainer.classList.add("favorito-activo");
+			}
+			divCatalogo.append(divSerieLikedContainer);
+			//  BOTON ELIMINAR DEL ARRAY
+			const botoneliminar = document.createElement("button");
+			botoneliminar.classList.add("btn-eliminar");
+			botoneliminar.textContent = "X";
+			divSerieLikedContainer.append(botoneliminar);
+
+			const h3Serie = document.createElement("h3");
+			h3Serie.textContent = serie.titulo;
+			divSerieLikedContainer.append(h3Serie);
+
+			const buttonFavSerie = document.createElement("button");
+			buttonFavSerie.classList.add("btn");
+			if (serie.favorito) {
+				buttonFavSerie.textContent = "Quitar Favorito";
+			} else {
+				buttonFavSerie.textContent = "Favorito";
+			}
+			divSerieLikedContainer.append(buttonFavSerie);
+
+			const buttonLikeSerie = document.createElement("button");
+			buttonLikeSerie.classList.add("btn");
+			if (serie.liked) {
+				buttonLikeSerie.classList.add("like-activo");
+			}
+			buttonLikeSerie.textContent = serie.liked ? "Liked" : "Like";
+			divSerieLikedContainer.append(buttonLikeSerie);
+		});
+	}
+
+	const containerSerieLiked = document.querySelectorAll("div.catalog-card");
+	if (containerSerieLiked.length > 0) {
+		containerSerieLiked.forEach((card) => {
+			card.addEventListener("mouseover", () => {
+				// console.log("RATON entra en tarjeta");
+				card.style.transform = "translateY(-6px)";
+			});
+
+			card.addEventListener("mouseout", () => {
+				// console.log("RATON sale de tarjeta");
+				card.style.transform = "translateY(0)";
+			});
+
+			card.addEventListener("dblclick", () => {
+				// console.log("Doble click sobre la tarjeta");
+				alert(`Doble click en => ${card.querySelector("h3").textContent}`);
+			});
+
+			const botonesSeriesLiked = card.querySelectorAll("button.btn");
+			if (botonesSeriesLiked.length > 0) {
+				botonesSeriesLiked.forEach((boton) => {
+					if (boton.textContent.toLowerCase().includes("favorito")) {
+						boton.addEventListener("click", () => {
+							listadoSeriesEnLaNube.forEach((serieNube) => {
+								if (serieNube.titulo === card.querySelector("h3").textContent) {
+									if (!serieNube.favorito) {
+										// console.log("Favorito Activado");
+										serieNube.favorito = true;
+										card.classList.add("favorito-activo");
+										boton.textContent = "Quitar Favorito";
+									} else {
+										// console.log("Favorito Desactivado");
+										serieNube.favorito = false;
+										card.classList.remove("favorito-activo");
+										boton.textContent = "Favorito";
+									}
+									localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+								}
+							});
+
+							recalcularFavoritos();
+						});
+					}
+
+					if (boton.textContent.toLowerCase().includes("like")) {
+						boton.addEventListener("click", () => {
+							listadoSeriesEnLaNube.forEach((serieNube) => {
+								if (serieNube.titulo === card.querySelector("h3").textContent) {
+									if (serieNube.liked) {
+										// console.log("Like Desactivado");
+										serieNube.liked = false;
+										boton.classList.remove("like-activo");
+										card.classList.remove("like-activo");
+										boton.textContent = "like";
+										card.remove();
+									}
+									localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+								}
+							});
+						});
+					}
+				});
+			}
+
+			const botonEliminar = card.querySelector("button.btn-eliminar");
+			if (botonEliminar) {
+				listadoSeriesEnLaNube.forEach((serieNube, index) => {
+					if (serieNube.titulo === card.querySelector("h3").textContent) {
+						botonEliminar.addEventListener("click", () => {
+							listadoSeriesEnLaNube.splice(index, 1);
+							localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+							seriesLiked();
+						});
+					}
+				});
+			}
+		});
+	}
 };
 
 /**
@@ -452,10 +622,11 @@ const seriesFavoritas = () => {
  */
 document.addEventListener("DOMContentLoaded", () => {
 	// Implementar la inicialización de eventos y las llamadas iniciales
-	// localStorage.setItem("catalogoSeries", "")
+
 	const btnCatalogoCompleto = document.getElementById("btn-main-screen");
 	const btnCatalogoFavoritas = document.getElementById("btn-fav-screen");
 	const btnCatalogoGustadas = document.getElementById("btn-liked-screen");
+	const btnReiniciarCatalogo = document.getElementById("btn-reiniciar-catalogo");
 
 	const btnAñadirSerie = document.getElementById("btn-añadir");
 	const inputAñadirSerie = document.getElementById("input-new-serie");
@@ -477,10 +648,27 @@ document.addEventListener("DOMContentLoaded", () => {
 		seriesFavoritas();
 	});
 
+	btnCatalogoGustadas.addEventListener("click", (event) => {
+		event.preventDefault();
+		seriesLiked();
+	});
+
+	// APARTADO REINICIAR CATALOGO
+	btnReiniciarCatalogo.addEventListener("click", (event) => {
+		event.preventDefault();
+		localStorage.removeItem("catalogoSeries");
+		if (!localStorage.getItem("catalogoSeries")) {
+			localStorage.setItem("catalogoSeries", JSON.stringify(catalogoSeries));
+		}
+		listadoSeriesEnLaNube = JSON.parse(localStorage.getItem("catalogoSeries"));
+		renderCatalogo(busquedaEnCurso);
+	});
+
 	// APARTADO DE AÑADIR SERIE
 	btnAñadirSerie.addEventListener("click", (event) => {
 		event.preventDefault();
 		añadirSerie(inputAñadirSerie.value);
+		inputAñadirSerie.value = "";
 		renderCatalogo();
 	});
 
@@ -500,7 +688,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		document.body.classList.toggle("modo-oscuro");
 	});
 	renderCatalogo(busquedaEnCurso);
-	seriesFavoritas();
+	// seriesFavoritas();
 	recalcularFavoritos();
 	recalcularLikes();
 });
