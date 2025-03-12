@@ -68,12 +68,46 @@ if (!localStorage.getItem("seriesLibrary")) {
 const saveSearch = (inputValue) => {
 	localStorage.setItem("currentSearch", inputValue);
 };
-// if (!localStorage.getItem("currentSearch")) {
-// 	saveSearch("");
-// }
 
 // ARRAY DE OBJETOS (NUBE) CON EL QUE TRABAJAREMOS
 const seriesLibraryCloud = JSON.parse(localStorage.getItem("seriesLibrary"));
+
+// FUNCION PARA CREAR FORMULARIO DE AÑADIR SERIE
+const createformContainer = () => {
+	const h1 = document.querySelector("h1");
+
+	const form = document.createElement("form");
+	form.id = "form-container";
+
+	const inputAñadir = document.createElement("input");
+	inputAñadir.type = "text";
+	inputAñadir.id = "input-add";
+	inputAñadir.placeholder = "¿Te falta alguna serie? Añadela...";
+	form.appendChild(inputAñadir);
+
+	const btnAñadir = document.createElement("button");
+	btnAñadir.id = "btn-add";
+	btnAñadir.classList.add("btn");
+	btnAñadir.textContent = "Añadir Serie";
+	form.appendChild(btnAñadir);
+
+	h1.after(form);
+};
+
+// FUNCION PARA AÑADIR SERIE AL ARRAY
+const addSerieToArray = (titulo) => {
+	if (!titulo.trim()) {
+		return alert("Por favor introduzca un titulo antes de Añadir")
+	}
+	const newSerie = { titulo: titulo, favorito: false, liked: false };
+	const coincidence = seriesLibraryCloud.find((serie) => titulo.trim().toLowerCase() === serie.titulo.toLowerCase());
+	if (coincidence) {
+		return alert("La serie añadida ya existe. Pruebe otra")
+	}
+	seriesLibraryCloud.unshift(newSerie);
+	saveSeries(seriesLibraryCloud);
+};
+
 
 // FUNCION PARA VACIAR EL CONTENEDOR
 const clearContainer = () => {
@@ -254,9 +288,16 @@ const recalcularLikes = () => {
  */
 
 document.addEventListener("DOMContentLoaded", () => {
+	createformContainer();
 	const inputBuscar = document.getElementById("input-buscar");
 	const btnBuscar = document.getElementById("btn-buscar");
 	const btnOscuro = document.getElementById("btn-oscuro");
+	const inputAdd = document.getElementById("input-add");
+	const btnAdd = document.getElementById("btn-add");
+
+	btnAdd.addEventListener("click", () => {
+		addSerieToArray(inputAdd.value);
+	})
 
 	inputBuscar.value = localStorage.getItem("currentSearch");
 	inputBuscar.addEventListener("keyup", () => {
@@ -275,7 +316,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		document.body.classList.toggle("modo-oscuro");
 	});
 
-	renderCatalogo();
+	if (inputBuscar.value) {
+		renderCatalogo(inputBuscar.value)
+	} else {
+		renderCatalogo();
+	}
 	recalcularFavoritos();
 	recalcularLikes();
 });

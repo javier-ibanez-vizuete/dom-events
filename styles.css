@@ -23,10 +23,10 @@ h1 {
 	margin-bottom: 20px;
 	font-weight: 600;
 }
-/*----------------------------------------------------
+/* ----------------------------------------------------
 		BARRA DE NAVEGACION
 ------------------------------------------------------*/
-.navigation-container {
+/* .navigation-container {
 	display: flex;
 	justify-content: center;
 	margin-bottom: 20px;
@@ -53,6 +53,34 @@ h1 {
 }
 .navigation-container .btn-reiniciar:hover {
 	background-color: #a54c1f;
+} */
+
+
+/* ----------- FORMULARIO AÑADIR SERIE --------- */
+#form-container {
+	display: flex;
+	justify-content: center;
+	gap: 8px;
+	margin-bottom: 20px;
+}
+
+#form-container input[type="text"] {
+	padding: 10px;
+	width: 240px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	outline: none;
+	transition: border-color 0.2s;
+}
+
+#form-container .btn {
+	padding: 10px 16px;
+	border: 1px solid #2f80ed;
+	background-color: #2f80ed;
+	color: #fff;
+	cursor: pointer;
+	border-radius: 4px;
+	transition: background-color 0.2s;
 }
 
 /* -------------------------------------------------
