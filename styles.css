@@ -53,7 +53,6 @@ h1 {
 }
 .navigation-container .btn-reiniciar:hover {
 	background-color: #a54c1f;
-
 }
 
 /* -------------------------------------------------
@@ -168,10 +167,10 @@ h1 {
 	transition: transform 0.2s ease-in-out, border-color 0.2s, background-color 0.3s;
 	position: relative;
 }
-.catalog-card:hover {
+/* .catalog-card:hover {
 	transform: translateY(-4px);
 	border-color: #2f80ed;
-}
+} */
 
 /* Título dentro de cada tarjeta */
 .catalog-card h3 {

@@ -23,46 +23,49 @@
  * Cada objeto representa una serie:
  *    { titulo: "texto", favorito: boolean, liked: boolean }
  */
-let catalogoSeries = [
-	{ titulo: "Breaking Bad", favorito: false, liked: false },
-	{ titulo: "Stranger Things", favorito: false, liked: false },
-	{ titulo: "The Witcher", favorito: false, liked: false },
-	{ titulo: "Better Call Saul", favorito: false, liked: false },
-	{ titulo: "La Casa de Papel", favorito: false, liked: false },
-	{ titulo: "Dark", favorito: false, liked: false },
-	{ titulo: "The Crown", favorito: false, liked: false },
-	{ titulo: "Peaky Blinders", favorito: false, liked: false },
-	{ titulo: "Game of Thrones", favorito: false, liked: false },
-	{ titulo: "The Mandalorian", favorito: false, liked: false },
-	{ titulo: "The Boys", favorito: false, liked: false },
-	{ titulo: "Lucifer", favorito: false, liked: false },
-	{ titulo: "Ozark", favorito: false, liked: false },
-	{ titulo: "Mindhunter", favorito: false, liked: false },
-	{ titulo: "Narcos", favorito: false, liked: false },
-	{ titulo: "Oz", favorito: false, liked: false },
-	{ titulo: "Vikings", favorito: false, liked: false },
-	{ titulo: "Sherlock", favorito: false, liked: false },
-	{ titulo: "House of Cards", favorito: false, liked: false },
-	{ titulo: "Westworld", favorito: false, liked: false },
-	{ titulo: "Homeland", favorito: false, liked: false },
-	{ titulo: "The Walking Dead", favorito: false, liked: false },
-	{ titulo: "Fargo", favorito: false, liked: false },
-	{ titulo: "Mr. Robot", favorito: false, liked: false },
-	{ titulo: "The Haunting of Hill House", favorito: false, liked: false },
-	{ titulo: "The Expanse", favorito: false, liked: false },
-	{ titulo: "Rick and Morty", favorito: false, liked: false },
-	{ titulo: "BoJack Horseman", favorito: false, liked: false },
-	{ titulo: "Arrested Development", favorito: false, liked: false },
-	{ titulo: "Lupin", favorito: false, liked: false },
-];
+// let catalogoSeries = [
+// 	{ titulo: "Breaking Bad", favorito: false, liked: false },
+// 	{ titulo: "Stranger Things", favorito: false, liked: false },
+// 	{ titulo: "The Witcher", favorito: false, liked: false },
+// 	{ titulo: "Better Call Saul", favorito: false, liked: false },
+// 	{ titulo: "La Casa de Papel", favorito: false, liked: false },
+// 	{ titulo: "Dark", favorito: false, liked: false },
+// 	{ titulo: "The Crown", favorito: false, liked: false },
+// 	{ titulo: "Peaky Blinders", favorito: false, liked: false },
+// 	{ titulo: "Game of Thrones", favorito: false, liked: false },
+// 	{ titulo: "The Mandalorian", favorito: false, liked: false },
+// 	{ titulo: "The Boys", favorito: false, liked: false },
+// 	{ titulo: "Lucifer", favorito: false, liked: false },
+// 	{ titulo: "Ozark", favorito: false, liked: false },
+// 	{ titulo: "Mindhunter", favorito: false, liked: false },
+// 	{ titulo: "Narcos", favorito: false, liked: false },
+// 	{ titulo: "Oz", favorito: false, liked: false },
+// 	{ titulo: "Vikings", favorito: false, liked: false },
+// 	{ titulo: "Sherlock", favorito: false, liked: false },
+// 	{ titulo: "House of Cards", favorito: false, liked: false },
+// 	{ titulo: "Westworld", favorito: false, liked: false },
+// 	{ titulo: "Homeland", favorito: false, liked: false },
+// 	{ titulo: "The Walking Dead", favorito: false, liked: false },
+// 	{ titulo: "Fargo", favorito: false, liked: false },
+// 	{ titulo: "Mr. Robot", favorito: false, liked: false },
+// 	{ titulo: "The Haunting of Hill House", favorito: false, liked: false },
+// 	{ titulo: "The Expanse", favorito: false, liked: false },
+// 	{ titulo: "Rick and Morty", favorito: false, liked: false },
+// 	{ titulo: "BoJack Horseman", favorito: false, liked: false },
+// 	{ titulo: "Arrested Development", favorito: false, liked: false },
+// 	{ titulo: "Lupin", favorito: false, liked: false },
+// ];
+// const saveSeries = (series) => {
+// 	localStorage.setItem("catalogoSeries", JSON.stringify(series));
+// };
 // console.log("ANTES DE LA NUBE =>", localStorage.getItem("catalogoSeries"));
-if (!localStorage.getItem("catalogoSeries")) {
-	localStorage.setItem("catalogoSeries", JSON.stringify(catalogoSeries));
-}
+// if (!localStorage.getItem("catalogoSeries")) {
+// 	// localStorage.setItem("catalogoSeries", JSON.stringify(catalogoSeries));
+// 	saveSeries(catalogoSeries);
+// }
 // console.log("DESPUES DE LA NUBE =>", localStorage.getItem("catalogoSeries"));
-let listadoSeriesEnLaNube = JSON.parse(localStorage.getItem("catalogoSeries"));
+// let listadoSeriesEnLaNube = JSON.parse(localStorage.getItem("catalogoSeries"));
 // console.log("QUE VALE LISTADO SERIES EN LA NUBE ", listadoSeriesEnLaNube);
-
 /**
  * 2) FUNCIÓN: renderCatalogo(filtroTexto)
  *    TIPO DE FUNCIÓN: function renderCatalogo(filtroTexto = "")
@@ -107,20 +110,20 @@ const renderCatalogo = (filtroTexto = "") => {
 		divCatalogo.innerHTML = "";
 	}
 
-	const catalogoFiltrado = listadoSeriesEnLaNube.filter((serie) => {
+	const catalogoFiltrado = seriesLibraryCloud.filter((serie) => {
 		const tituloSerie = serie.titulo.toLowerCase();
 		const textoFiltradoMinusculas = filtroTexto.toLowerCase();
-		if (filtroTexto.length > 0 && tituloSerie.includes(textoFiltradoMinusculas)) {
+		if (filtroTexto.length && tituloSerie.includes(textoFiltradoMinusculas)) {
 			// console.log("SERIE FILTRADA =>", serie); //PRUEBA TEXTO
 			return serie;
 		}
-		if (filtroTexto.length === 0) {
+		if (!filtroTexto.length) {
 			// console.log("SERIE FILTRADA TEXTO VACIO =>", serie); //PRUEBA TEXTO VACIO
 			return serie;
 		}
 	});
 
-	if (catalogoFiltrado.length > 0) {
+	if (catalogoFiltrado.length) {
 		catalogoFiltrado.forEach((serie) => {
 			const divSerieContainer = document.createElement("div");
 			divSerieContainer.classList.add("catalog-card");
@@ -162,7 +165,7 @@ const renderCatalogo = (filtroTexto = "") => {
 	}
 
 	const divSerieFiltrada = document.querySelectorAll("div.catalog-card");
-	if (divSerieFiltrada.length > 0) {
+	if (divSerieFiltrada.length) {
 		divSerieFiltrada.forEach((card) => {
 			card.addEventListener("mouseover", () => {
 				// console.log("RATON entra en tarjeta");
@@ -183,7 +186,7 @@ const renderCatalogo = (filtroTexto = "") => {
 			botonesSeriesFiltradas.forEach((boton) => {
 				if (boton.textContent.toLowerCase().includes("favorito")) {
 					boton.addEventListener("click", () => {
-						listadoSeriesEnLaNube.forEach((serieNube) => {
+						seriesLibraryCloud.forEach((serieNube) => {
 							if (serieNube.titulo === card.querySelector("h3").textContent) {
 								if (!serieNube.favorito) {
 									// console.log("Favorito Activado");
@@ -196,7 +199,7 @@ const renderCatalogo = (filtroTexto = "") => {
 									card.classList.remove("favorito-activo");
 									boton.textContent = "Favorito";
 								}
-								localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+								localStorage.setItem("catalogoSeries", JSON.stringify(seriesLibraryCloud));
 							}
 						});
 
@@ -206,7 +209,7 @@ const renderCatalogo = (filtroTexto = "") => {
 
 				if (boton.textContent.toLowerCase().includes("like")) {
 					boton.addEventListener("click", () => {
-						listadoSeriesEnLaNube.forEach((serieNube) => {
+						seriesLibraryCloud.forEach((serieNube) => {
 							if (serieNube.titulo === card.querySelector("h3").textContent) {
 								if (!serieNube.liked) {
 									// console.log("Like Activado");
@@ -221,7 +224,7 @@ const renderCatalogo = (filtroTexto = "") => {
 									boton.textContent = "Like";
 									card.classList.remove("like-activo");
 								}
-								localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+								saveSeries(seriesLibraryCloud);
 							}
 						});
 
@@ -233,10 +236,13 @@ const renderCatalogo = (filtroTexto = "") => {
 			const botonEliminarSerie = card.querySelector("button.btn-eliminar");
 			if (botonEliminarSerie) {
 				botonEliminarSerie.addEventListener("click", () => {
-					listadoSeriesEnLaNube.forEach((serieNube, index) => {
+					seriesLibraryCloud.forEach((serieNube, index) => {
 						if (serieNube.titulo === card.querySelector("h3").textContent) {
-							listadoSeriesEnLaNube.splice(index, 1);
-							localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+							seriesLibraryCloud.splice(index, 1);
+							recalcularFavoritos();
+							recalcularLikes();
+
+							saveSeries(seriesLibraryCloud);
 							renderCatalogo();
 						}
 					});
@@ -244,7 +250,7 @@ const renderCatalogo = (filtroTexto = "") => {
 			}
 		});
 	}
-	return listadoSeriesEnLaNube;
+	return seriesLibraryCloud;
 };
 
 /**
@@ -256,7 +262,7 @@ const renderCatalogo = (filtroTexto = "") => {
 const recalcularFavoritos = () => {
 	// Implementar aquí
 	const spanFavoritos = document.querySelector("#total-favoritos");
-	const numeroDeFavoritos = listadoSeriesEnLaNube.reduce((acc, serie) => {
+	const numeroDeFavoritos = seriesLibraryCloud.reduce((acc, serie) => {
 		if (serie.favorito) {
 			acc++;
 		}
@@ -276,7 +282,7 @@ const recalcularFavoritos = () => {
 const recalcularLikes = () => {
 	// Implementar aquí
 	const spanLikes = document.querySelector("#total-likes");
-	const numeroDeLikes = listadoSeriesEnLaNube.reduce((acc, serie) => {
+	const numeroDeLikes = seriesLibraryCloud.reduce((acc, serie) => {
 		if (serie.liked) {
 			acc++;
 		}
@@ -294,39 +300,30 @@ const recalcularLikes = () => {
  * 2-ESE OBJETO TIENE QUE TENER DE FORMA PREDETERMINADA FAVORITOS: TRUE / FALSE Y LIKED: TRUE O FALSE;
  */
 
-const añadirSerie = (tituloNuevaSerie) => {
-	let nuevaSerie = { titulo: tituloNuevaSerie, favorito: false, liked: false };
-
-	if (tituloNuevaSerie.length === 0) {
+const añadirSerie = (titulo) => {
+	if (!titulo) {
 		alert("Porfavor introduzca un titulo antes de añadir");
+		return;
 	}
-	let tituloNuevaSerieEnMinusculas = "";
-	if (tituloNuevaSerie.length > 0) {
-		tituloNuevaSerieEnMinusculas = tituloNuevaSerie.trim().toLowerCase();
+	let nuevaSerie = { titulo, favorito: false, liked: false };
+
+	const existSerie = seriesLibraryCloud.find(
+		(serie) => serie.titulo.toLowerCase() === titulo.trim().toLowerCase()
+	);
+
+	if (existSerie) {
+		alert("La serie introducida ya existe");
+		return;
 	}
-	if (listadoSeriesEnLaNube.length > 0) {
-		for (let serie of listadoSeriesEnLaNube) {
-			const tituloSerieExistente = serie.titulo.toLowerCase();
-			if (tituloSerieExistente === tituloNuevaSerieEnMinusculas) {
-				alert("La serie introducida ya existe");
-				break;
-			}
-		}
-		listadoSeriesEnLaNube.forEach((serie, index, array) => {
-			if (index === array.length - 1) {
-				listadoSeriesEnLaNube.unshift(nuevaSerie);
-				localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
-			}
-		});
-		// console.log("lista De Series en la nube", listadoSeriesEnLaNube);
-	}
+	seriesLibraryCloud.unshift(nuevaSerie);
+	saveSeries(seriesLibraryCloud); // console.log("lista De Series en la nube", listadoSeriesEnLaNube);
 };
 
 /**
  * AÑADIR SOLO FAVORITOS
  */
 const seriesFavoritas = () => {
-	const soloSeriesFavoritas = listadoSeriesEnLaNube.filter((serie) => {
+	const soloSeriesFavoritas = seriesLibraryCloud.filter((serie) => {
 		if (serie.favorito) {
 			return serie;
 		}
@@ -398,7 +395,7 @@ const seriesFavoritas = () => {
 			botonesSeriesFiltradas.forEach((boton) => {
 				if (boton.textContent.toLowerCase().includes("favorito")) {
 					boton.addEventListener("click", () => {
-						listadoSeriesEnLaNube.forEach((serieNube) => {
+						seriesLibraryCloud.forEach((serieNube) => {
 							if (serieNube.titulo === card.querySelector("h3").textContent) {
 								if (!serieNube.favorito) {
 									// console.log("Favorito Activado");
@@ -412,7 +409,7 @@ const seriesFavoritas = () => {
 									boton.textContent = "Favorito";
 									card.remove();
 								}
-								localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+								localStorage.setItem("catalogoSeries", JSON.stringify(seriesLibraryCloud));
 							}
 						});
 
@@ -422,7 +419,7 @@ const seriesFavoritas = () => {
 
 				if (boton.textContent.toLowerCase().includes("like")) {
 					boton.addEventListener("click", () => {
-						listadoSeriesEnLaNube.forEach((serieNube) => {
+						seriesLibraryCloud.forEach((serieNube) => {
 							if (serieNube.titulo === card.querySelector("h3").textContent) {
 								if (!serieNube.liked) {
 									// console.log("Like Activado");
@@ -437,7 +434,7 @@ const seriesFavoritas = () => {
 									boton.textContent = "Like";
 									card.classList.remove("like-activo");
 								}
-								localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+								localStorage.setItem("catalogoSeries", JSON.stringify(seriesLibraryCloud));
 							}
 						});
 
@@ -448,12 +445,14 @@ const seriesFavoritas = () => {
 
 			const botonEliminar = card.querySelector("button.btn-eliminar");
 			if (botonEliminar) {
-				listadoSeriesEnLaNube.forEach((serieNube, index) => {
+				seriesLibraryCloud.forEach((serieNube, index) => {
 					if (serieNube.titulo === card.querySelector("h3").textContent) {
 						botonEliminar.addEventListener("click", () => {
 							console.log("Que mierda de pelicula ", serieNube.titulo);
-							listadoSeriesEnLaNube.splice(index, 1);
-							localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+							seriesLibraryCloud.splice(index, 1);
+							recalcularFavoritos();
+							recalcularLikes();
+							localStorage.setItem("catalogoSeries", JSON.stringify(seriesLibraryCloud));
 							seriesFavoritas();
 						});
 					}
@@ -467,7 +466,7 @@ const seriesFavoritas = () => {
  *  AÑADIOR SOLO SERIES ME GUSTAN
  */
 const seriesLiked = () => {
-	const soloSeriesLiked = listadoSeriesEnLaNube.filter((serie) => {
+	const soloSeriesLiked = seriesLibraryCloud.filter((serie) => {
 		if (serie.liked) {
 			// console.log(`La serie en cuestion es ${serie.titulo}`);
 			return serie;
@@ -542,7 +541,7 @@ const seriesLiked = () => {
 				botonesSeriesLiked.forEach((boton) => {
 					if (boton.textContent.toLowerCase().includes("favorito")) {
 						boton.addEventListener("click", () => {
-							listadoSeriesEnLaNube.forEach((serieNube) => {
+							seriesLibraryCloud.forEach((serieNube) => {
 								if (serieNube.titulo === card.querySelector("h3").textContent) {
 									if (!serieNube.favorito) {
 										// console.log("Favorito Activado");
@@ -555,7 +554,7 @@ const seriesLiked = () => {
 										card.classList.remove("favorito-activo");
 										boton.textContent = "Favorito";
 									}
-									localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+									localStorage.setItem("catalogoSeries", JSON.stringify(seriesLibraryCloud));
 								}
 							});
 
@@ -565,7 +564,7 @@ const seriesLiked = () => {
 
 					if (boton.textContent.toLowerCase().includes("like")) {
 						boton.addEventListener("click", () => {
-							listadoSeriesEnLaNube.forEach((serieNube) => {
+							seriesLibraryCloud.forEach((serieNube) => {
 								if (serieNube.titulo === card.querySelector("h3").textContent) {
 									if (serieNube.liked) {
 										// console.log("Like Desactivado");
@@ -575,7 +574,7 @@ const seriesLiked = () => {
 										boton.textContent = "like";
 										card.remove();
 									}
-									localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+									localStorage.setItem("catalogoSeries", JSON.stringify(seriesLibraryCloud));
 								}
 							});
 						});
@@ -585,11 +584,14 @@ const seriesLiked = () => {
 
 			const botonEliminar = card.querySelector("button.btn-eliminar");
 			if (botonEliminar) {
-				listadoSeriesEnLaNube.forEach((serieNube, index) => {
+				seriesLibraryCloud.forEach((serieNube, index) => {
 					if (serieNube.titulo === card.querySelector("h3").textContent) {
 						botonEliminar.addEventListener("click", () => {
-							listadoSeriesEnLaNube.splice(index, 1);
-							localStorage.setItem("catalogoSeries", JSON.stringify(listadoSeriesEnLaNube));
+							seriesLibraryCloud.splice(index, 1);
+							recalcularFavoritos();
+							recalcularLikes();
+
+							localStorage.setItem("catalogoSeries", JSON.stringify(seriesLibraryCloud));
 							seriesLiked();
 						});
 					}
@@ -660,7 +662,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (!localStorage.getItem("catalogoSeries")) {
 			localStorage.setItem("catalogoSeries", JSON.stringify(catalogoSeries));
 		}
-		listadoSeriesEnLaNube = JSON.parse(localStorage.getItem("catalogoSeries"));
+		seriesLibraryCloud = JSON.parse(localStorage.getItem("catalogoSeries"));
 		renderCatalogo(busquedaEnCurso);
 	});
 
@@ -680,7 +682,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		renderCatalogo(busquedaEnCurso);
 	});
 
-	btnBuscar.addEventListener("click", (event) => {
+	btnBuscar.addEventListener("click", () => {
 		renderCatalogo(inputBuscar.value);
 	});
 	// APARTADO DE MODO OSCURO
