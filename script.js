@@ -55,22 +55,38 @@ let catalogoSeries = [
 	{ titulo: "Arrested Development", favorito: false, liked: false },
 	{ titulo: "Lupin", favorito: false, liked: false },
 ];
-
+// localStorage.removeItem("seriesLibrary");
 // FUNCION PARA ALMACENAR CATALOGO DE SERIES
 const saveSeries = (seriesList) => {
 	localStorage.setItem("seriesLibrary", JSON.stringify(seriesList));
 };
+
 if (!localStorage.getItem("seriesLibrary")) {
 	saveSeries(catalogoSeries);
 }
-
 // FUNCION PARA ALMACENAR BUSQUEDA
 const saveSearch = (inputValue) => {
 	localStorage.setItem("currentSearch", inputValue);
 };
 
 // ARRAY DE OBJETOS (NUBE) CON EL QUE TRABAJAREMOS
-const seriesLibraryCloud = JSON.parse(localStorage.getItem("seriesLibrary"));
+let seriesLibraryCloud = catalogoSeries;
+if (localStorage.getItem("seriesLibrary")) {
+	seriesLibraryCloud = JSON.parse(localStorage.getItem("seriesLibrary"));
+}
+
+// FUNCION PARA CREAR BOTON DE RESETEO
+const createButtonForReset = () => {
+	const divForButton = document.createElement("div");
+	divForButton.id = "div-reset-container";
+
+	const btnForReset = document.createElement("button");
+	btnForReset.classList.add("btn-reset");
+	btnForReset.textContent = "Reiniciar Catalogo";
+	divForButton.appendChild(btnForReset);
+
+	document.body.prepend(divForButton);
+};
 
 // FUNCION PARA CREAR EL DIV DE BOTONES!
 const createButtonsForSection = () => {
@@ -89,14 +105,14 @@ const createButtonsForSection = () => {
 	const btnFavoriteLibrary = document.createElement("button");
 	btnFavoriteLibrary.id = "btn-favorite-library";
 	btnFavoriteLibrary.classList.add("btn");
-	// btnFavoriteLibrary.classList.add("open-favorite-library");
+
 	btnFavoriteLibrary.textContent = "Series Favoritas";
 	divForFilterButtons.appendChild(btnFavoriteLibrary);
 
 	const btnLikedLibrary = document.createElement("button");
 	btnLikedLibrary.id = "btn-liked-library";
 	btnLikedLibrary.classList.add("btn");
-	// btnLikedLibrary.classList.add("open-liked-library");
+
 	btnLikedLibrary.textContent = "Series que me Gustan";
 	divForFilterButtons.appendChild(btnLikedLibrary);
 
@@ -185,74 +201,12 @@ const filterSeriesByLikes = () => {
 	return filteredSeries;
 };
 
-// FUNCION PARA CREAR EVENTOS EN TARJETAS 'CARD'
-// const createEventsCard = (card) => {
-// 	seriesLibraryCloud.forEach((serie) => {
-// 		const divCard = card;
-// 		console.log("¿Que es Card?", card);
-// 		const h3Card = card.querySelector("h3");
-// 		console.log("¿Que es h3?", h3Card);
-// 		const buttonsCard = Array.from(card.querySelectorAll("button.btn"));
-// 		console.log("¿Que es buttonsCard?", buttonsCard);
-// 		const buttonFavorite = buttonsCard.find((button) => button.textContent.toLowerCase().includes("favorito"));
-// 		console.log("¿Que es favorite button?", buttonFavorite);
-// 		const buttonLiked = buttonsCard.find((button) => button.textContent.toLowerCase().includes("like"));
-// 		console.log("¿Que es Liked Button?", buttonLiked);
-
-// 		divCard.addEventListener("mouseover", () => {
-// 			divCard.style.transform = "translateY(-6px)";
-// 			divCard.style.borderColor = "#2f80ed";
-// 		});
-// 		divCard.addEventListener("mouseout", () => {
-// 			divCard.style.transform = "translateY(0)";
-// 			divCard.style.removeProperty("border-color");
-// 		});
-// 		divCard.addEventListener("dblclick", () => {
-// 			alert(`Hiciste doble Click en -> ${h3Card.textContent}`);
-// 		});
-// 		buttonFavorite.addEventListener("click", () => {
-// 			if (serie.favorito) {
-// 				serie.favorito = false;
-// 				divCard.classList.remove("favorito-activo");
-// 				buttonFavorite.textContent = "Favorito";
-// 				saveSeries(seriesLibraryCloud);
-// 			}
-// 			if (!serie.favorito) {
-// 				serie.favorito = true;
-// 				divCard.classList.add("favorito-activo");
-// 				buttonFavorite.textContent = "Quitar Favorito";
-// 				saveSeries(seriesLibraryCloud);
-// 			}
-// 			recalcularFavoritos();
-// 		});
-
-// 		buttonLiked.addEventListener("click", () => {
-// 			if (serie.liked) {
-// 				serie.liked = false;
-// 				divCard.classList.remove("like-activo");
-// 				buttonLiked.classList.remove("like-activo");
-// 				buttonLiked.textContent = "Like";
-// 				saveSeries(seriesLibraryCloud);
-// 			}
-// 			if (!serie.liked) {
-// 				serie.liked = true;
-// 				divCard.classList.add("like-activo");
-// 				buttonLiked.classList.add("like-activo");
-// 				buttonLiked.textContent = "Liked";
-// 				saveSeries(seriesLibraryCloud);
-// 			}
-// 			recalcularLikes();
-// 		});
-// 	});
-
-// };
-
 // FUNCION PARA CREAR BOTON DE ELIMINAR
 const createButtonForDelete = () => {
 	const btnDelete = document.createElement("button");
 	btnDelete.classList.add("btn-delete");
 	btnDelete.textContent = "X";
-return btnDelete;
+	return btnDelete;
 };
 
 // FUNCION PARA CREAR BOTON LIKES
@@ -337,7 +291,7 @@ const createSerieCard = (serie, index) => {
 		recalcularLikes();
 	});
 	divSerieCard.appendChild(btnLiked);
-	
+
 	const btnDelete = createButtonForDelete();
 	btnDelete.addEventListener("click", () => {
 		seriesLibraryCloud.splice(index, 1);
@@ -405,7 +359,7 @@ const renderCatalogo = (filtroTexto = "") => {
 	const btnLikedLibrary = document.getElementById("btn-liked-library");
 	// console.log("El div Contenedor vale => ", divContenedorCatalogo.innerHTML);
 	clearContainer();
-	
+
 	if (btnFullLibrary.classList.contains("open-full-library")) {
 		const filteredSeries = filterSeriesByTittle(filtroTexto);
 		filteredSeries.forEach((serie, index) => {
@@ -426,7 +380,7 @@ const renderCatalogo = (filtroTexto = "") => {
 				const libraryContainer = document.getElementById("catalogo");
 				const serieCard = createSerieCard(serie, index);
 				serieCard.classList.add("favorito-activo");
-				
+
 				libraryContainer.appendChild(serieCard);
 			});
 		}
@@ -439,7 +393,7 @@ const renderCatalogo = (filtroTexto = "") => {
 				const libraryContainer = document.getElementById("catalogo");
 				const serieCard = createSerieCard(serie, index);
 				serieCard.classList.add("like-activo");
-				
+
 				libraryContainer.appendChild(serieCard);
 			});
 		}
@@ -499,8 +453,12 @@ const recalcularLikes = () => {
  *   - Llamamos a recalcularFavoritos() y recalcularLikes() para iniciar contadores
  */
 document.addEventListener("DOMContentLoaded", () => {
+	createButtonForReset();
 	createformContainer();
 	createButtonsForSection();
+
+	const btnReset = document.querySelector("button.btn-reset");
+
 	const inputAdd = document.getElementById("input-add");
 	const btnAdd = document.getElementById("btn-add");
 
@@ -511,6 +469,16 @@ document.addEventListener("DOMContentLoaded", () => {
 	const btnFullLibrary = document.getElementById("btn-full-library");
 	const btnFavotireLibrary = document.getElementById("btn-favorite-library");
 	const btnLikedLibrary = document.getElementById("btn-liked-library");
+
+	// console.log(JSON.parse(localStorage.getItem("seriesLibrary"))[0]);
+	btnReset.addEventListener("click", (event) => {
+		console.log("Estoy funcionando");
+		saveSeries(catalogoSeries);
+		seriesLibraryCloud = JSON.parse(localStorage.getItem("seriesLibrary"));
+		recalcularFavoritos();
+		recalcularLikes();
+		renderCatalogo();
+	});
 
 	btnAdd.addEventListener("click", () => {
 		addSerieToArray(inputAdd.value);
