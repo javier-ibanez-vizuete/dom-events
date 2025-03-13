@@ -55,7 +55,6 @@ h1 {
 	background-color: #a54c1f;
 } */
 
-
 /* ----------- FORMULARIO AÑADIR SERIE --------- */
 #form-container {
 	display: flex;
@@ -120,27 +119,27 @@ h1 {
 /*------------------------------------------------
     SECCION AÑADIR SERIES
 -------------------------------------------------*/
-.add-series-bar {
+/* .add-series-bar {
 	display: flex;
 	justify-content: center;
 	margin-bottom: 20px;
 	gap: 8px;
-}
+} */
 
-.add-series-bar input[type="text"] {
+/* .add-series-bar input[type="text"] {
 	padding: 10px;
 	width: 240px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	outline: none;
 	transition: border-color 0.2s;
-}
+} */
 
-.add-series-bar input[type="text"]:focus {
+/* .add-series-bar input[type="text"]:focus {
 	border-color: #2f80ed;
-}
+} */
 
-.add-series-bar .btn {
+/* .add-series-bar .btn {
 	padding: 10px 16px;
 	border: 1px solid #2f80ed;
 	background-color: #2f80ed;
@@ -148,11 +147,11 @@ h1 {
 	cursor: pointer;
 	border-radius: 4px;
 	transition: background-color 0.2s;
-}
+} */
 
-.add-series-bar .btn:hover {
+/* .add-series-bar .btn:hover {
 	background-color: #1f4ba5;
-}
+} */
 
 /* -------------------------------------------------
      SECCIÓN DE CONTADORES
@@ -169,6 +168,29 @@ h1 {
 	padding: 8px 16px;
 	border-radius: 4px;
 	border: 1px solid #ccc;
+}
+
+/*  -------------- DIV PARA BOTONES DE FILTRO ---------------- */
+.div-filter-libraries {
+	display: flex;
+	justify-content: center;
+	gap: 8px;
+
+	margin-bottom: 20px;
+}
+
+.div-filter-libraries .btn {
+	padding: 10px 16px;
+	border: 1px solid #2f80ed;
+	background-color: #2f80ed;
+	color: #fff;
+	cursor: pointer;
+	border-radius: 4px;
+	transition: background-color 0.2s;
+}
+
+.div-filter-libraries .btn:hover {
+	background-color: #1f4ba5;
 }
 
 /* -------------------------------------------------

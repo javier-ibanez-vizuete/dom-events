@@ -72,6 +72,37 @@ const saveSearch = (inputValue) => {
 // ARRAY DE OBJETOS (NUBE) CON EL QUE TRABAJAREMOS
 const seriesLibraryCloud = JSON.parse(localStorage.getItem("seriesLibrary"));
 
+// FUNCION PARA CREAR EL DIV DE BOTONES!
+const createButtonsForSection = () => {
+	const divCounterSection = document.querySelector("div.counters-section");
+
+	const divForFilterButtons = document.createElement("div");
+	divForFilterButtons.classList.add("div-filter-libraries");
+
+	const btnFullLibrary = document.createElement("button");
+	btnFullLibrary.id = "btn-full-library";
+	btnFullLibrary.classList.add("btn");
+	btnFullLibrary.classList.add("open-full-library");
+	btnFullLibrary.textContent = "Catalogo Completo";
+	divForFilterButtons.appendChild(btnFullLibrary);
+
+	const btnFavoriteLibrary = document.createElement("button");
+	btnFavoriteLibrary.id = "btn-favorite-library";
+	btnFavoriteLibrary.classList.add("btn");
+	// btnFavoriteLibrary.classList.add("open-favorite-library");
+	btnFavoriteLibrary.textContent = "Series Favoritas";
+	divForFilterButtons.appendChild(btnFavoriteLibrary);
+
+	const btnLikedLibrary = document.createElement("button");
+	btnLikedLibrary.id = "btn-liked-library";
+	btnLikedLibrary.classList.add("btn");
+	// btnLikedLibrary.classList.add("open-liked-library");
+	btnLikedLibrary.textContent = "Series que me Gustan";
+	divForFilterButtons.appendChild(btnLikedLibrary);
+
+	divCounterSection.after(divForFilterButtons);
+};
+
 // FUNCION PARA CREAR FORMULARIO DE AÑADIR SERIE
 const createformContainer = () => {
 	const h1 = document.querySelector("h1");
@@ -97,17 +128,16 @@ const createformContainer = () => {
 // FUNCION PARA AÑADIR SERIE AL ARRAY
 const addSerieToArray = (titulo) => {
 	if (!titulo.trim()) {
-		return alert("Por favor introduzca un titulo antes de Añadir")
+		return alert("Por favor introduzca un titulo antes de Añadir");
 	}
 	const newSerie = { titulo: titulo, favorito: false, liked: false };
 	const coincidence = seriesLibraryCloud.find((serie) => titulo.trim().toLowerCase() === serie.titulo.toLowerCase());
 	if (coincidence) {
-		return alert("La serie añadida ya existe. Pruebe otra")
+		return alert("La serie añadida ya existe. Pruebe otra");
 	}
 	seriesLibraryCloud.unshift(newSerie);
 	saveSeries(seriesLibraryCloud);
 };
-
 
 // FUNCION PARA VACIAR EL CONTENEDOR
 const clearContainer = () => {
@@ -115,7 +145,7 @@ const clearContainer = () => {
 	container.innerHTML = "";
 };
 
-// FUNCION PARA FILTRAR SERIES
+// FUNCION PARA FILTRAR SERIES (TITULO)
 const filterSeriesByTittle = (titulo = "") => {
 	const filteredSeries = seriesLibraryCloud.filter((serie) =>
 		serie.titulo.toLowerCase().includes(titulo.trim().toLowerCase())
@@ -126,64 +156,193 @@ const filterSeriesByTittle = (titulo = "") => {
 	return filteredSeries;
 };
 
+// FUNCION PARA FILTRAR SERIES (FAVORITAS)
+const filterSeriesByFavorites = () => {
+	const filteredSeries = seriesLibraryCloud.filter((serie) => serie.favorito);
+	const btnFullLibrary = document.getElementById("btn-full-library");
+	const btnFavoriteLibrary = document.getElementById("btn-favorite-library");
+
+	if (!filteredSeries.length) {
+		alert("Actualmente no tienes ninguna serie en Favorito");
+		btnFullLibrary.classList.add("open-full-library");
+		btnFavoriteLibrary.classList.remove("open-favorite-library");
+		return renderCatalogo();
+	}
+	return filteredSeries;
+};
+
+// FUNCION PARA FILTRAR SERIES (LIKES)
+const filterSeriesByLikes = () => {
+	const filteredSeries = seriesLibraryCloud.filter((serie) => serie.liked);
+	const btnFullLibrary = document.getElementById("btn-full-library");
+	const btnLikedLibrary = document.getElementById("btn-liked-library");
+	if (!filteredSeries.length) {
+		alert("Actualmente no tienes ninguna serie con Likes");
+		btnFullLibrary.classList.add("open-full-library");
+		btnLikedLibrary.classList.remove("open-liked-library");
+		return renderCatalogo();
+	}
+	return filteredSeries;
+};
+
 // FUNCION PARA CREAR EVENTOS EN TARJETAS 'CARD'
-const createEventsCard = (card, serie) => {
-	const divCard = card;
-	const h3Card = card.querySelector("h3");
-	const buttonsCard = Array.from(card.querySelectorAll("button.btn"));
-	const buttonFavorite = buttonsCard.find((button) => button.textContent.toLowerCase().includes("favorito"));
-	const buttonLiked = buttonsCard.find((button) => button.textContent.toLowerCase().includes("like"));
+// const createEventsCard = (card) => {
+// 	seriesLibraryCloud.forEach((serie) => {
+// 		const divCard = card;
+// 		console.log("¿Que es Card?", card);
+// 		const h3Card = card.querySelector("h3");
+// 		console.log("¿Que es h3?", h3Card);
+// 		const buttonsCard = Array.from(card.querySelectorAll("button.btn"));
+// 		console.log("¿Que es buttonsCard?", buttonsCard);
+// 		const buttonFavorite = buttonsCard.find((button) => button.textContent.toLowerCase().includes("favorito"));
+// 		console.log("¿Que es favorite button?", buttonFavorite);
+// 		const buttonLiked = buttonsCard.find((button) => button.textContent.toLowerCase().includes("like"));
+// 		console.log("¿Que es Liked Button?", buttonLiked);
 
-	divCard.addEventListener("mouseover", (event) => {
-		divCard.style.transform = "translateY(-6px)";
-		divCard.style.borderColor = "#2f80ed";
-	});
-	divCard.addEventListener("mouseout", (event) => {
-		divCard.style.transform = "translateY(0)";
-		divCard.style.removeProperty("border-color");
-	});
-	divCard.addEventListener("dblclick", (event) => {
-		alert(`Hiciste doble Click en -> ${h3Card.textContent}`);
-	});
+// 		divCard.addEventListener("mouseover", () => {
+// 			divCard.style.transform = "translateY(-6px)";
+// 			divCard.style.borderColor = "#2f80ed";
+// 		});
+// 		divCard.addEventListener("mouseout", () => {
+// 			divCard.style.transform = "translateY(0)";
+// 			divCard.style.removeProperty("border-color");
+// 		});
+// 		divCard.addEventListener("dblclick", () => {
+// 			alert(`Hiciste doble Click en -> ${h3Card.textContent}`);
+// 		});
+// 		buttonFavorite.addEventListener("click", () => {
+// 			if (serie.favorito) {
+// 				serie.favorito = false;
+// 				divCard.classList.remove("favorito-activo");
+// 				buttonFavorite.textContent = "Favorito";
+// 				saveSeries(seriesLibraryCloud);
+// 			}
+// 			if (!serie.favorito) {
+// 				serie.favorito = true;
+// 				divCard.classList.add("favorito-activo");
+// 				buttonFavorite.textContent = "Quitar Favorito";
+// 				saveSeries(seriesLibraryCloud);
+// 			}
+// 			recalcularFavoritos();
+// 		});
 
-	buttonFavorite.addEventListener("click", (event) => {
-		serie.favorito = serie.favorito ? false : true;
-		divCard.classList.toggle("favorito-activo");
-		buttonFavorite.textContent = serie.favorito ? "Quitar Favorito" : "Favorito";
+// 		buttonLiked.addEventListener("click", () => {
+// 			if (serie.liked) {
+// 				serie.liked = false;
+// 				divCard.classList.remove("like-activo");
+// 				buttonLiked.classList.remove("like-activo");
+// 				buttonLiked.textContent = "Like";
+// 				saveSeries(seriesLibraryCloud);
+// 			}
+// 			if (!serie.liked) {
+// 				serie.liked = true;
+// 				divCard.classList.add("like-activo");
+// 				buttonLiked.classList.add("like-activo");
+// 				buttonLiked.textContent = "Liked";
+// 				saveSeries(seriesLibraryCloud);
+// 			}
+// 			recalcularLikes();
+// 		});
+// 	});
 
-		recalcularFavoritos();
-	});
+// };
 
-	buttonLiked.addEventListener("click", (event) => {
-		serie.liked = serie.liked ? false : true;
-		divCard.classList.toggle("like-activo");
-		buttonLiked.classList.toggle("like-activo");
-		buttonLiked.textContent = serie.liked ? "Liked" : "Like";
+// FUNCION PARA CREAR BOTON LIKES
+const createLikesButton = (liked) => {
+	const btnLikes = document.createElement("button");
+	btnLikes.classList.add("btn");
+	if (liked) {
+		btnLikes.classList.add("like-activo");
+		btnLikes.textContent = "Liked";
+	} else {
+		btnLikes.classList.remove("like-activo");
+		btnLikes.textContent = "Like";
+	}
 
-		recalcularLikes();
-	});
+	return btnLikes;
+};
+
+// FUNCION PARA CREAR BOTON FAVORITO
+const createFavoriteButton = (favorito) => {
+	const btnFavorito = document.createElement("button");
+	btnFavorito.classList.add("btn");
+	btnFavorito.textContent = favorito ? "Quitar Favorito" : "Favorito";
+
+	return btnFavorito;
+};
+
+// FUNCION PARA CREAR TITULO DE SERIE
+const createSerieTittle = (titulo) => {
+	const h3TituloSerie = document.createElement("h3");
+	h3TituloSerie.textContent = titulo;
+
+	return h3TituloSerie;
 };
 
 // FUNCION PARA CREAR TARJETA DE SERIE
 const createSerieCard = (serie) => {
-	const divContainerCard = document.createElement("div");
-	divContainerCard.classList.add("catalog-card");
+	const divSerieCard = document.createElement("div");
+	divSerieCard.classList.add("catalog-card");
+	if (serie.favorito) {
+		divSerieCard.classList.add("favorito-activo");
+	} else {
+		divSerieCard.classList.remove("favorito-activo");
+	}
 
-	const h3Card = document.createElement("h3");
-	h3Card.textContent = serie.titulo;
-	divContainerCard.appendChild(h3Card);
+	const { titulo } = serie;
+	const titleSerie = createSerieTittle(titulo);
+	divSerieCard.appendChild(titleSerie);
 
-	const btnFavoriteCard = document.createElement("button");
-	btnFavoriteCard.classList.add("btn");
-	btnFavoriteCard.textContent = "Favorito"; //ECHAR UN VISTAZO DESPUES PARA AUTOMATIZARLO
-	divContainerCard.appendChild(btnFavoriteCard);
+	const { favorito } = serie;
+	const btnFavorite = createFavoriteButton(favorito);
+	btnFavorite.addEventListener("click", () => {
+		if (serie.favorito) {
+			serie.favorito = false;
+			btnFavorite.textContent = "Favorito";
+			divSerieCard.classList.remove("favorito-activo");
+		} else {
+			serie.favorito = true;
+			btnFavorite.textContent = "Quitar favorito";
+			divSerieCard.classList.add("favorito-activo");
+		}
 
-	const btnLikedCard = document.createElement("button");
-	btnLikedCard.classList.add("btn");
-	btnLikedCard.textContent = "Like"; // ECHAR UN VISTAZO DESPUES PARA AUTOMATIZARLO
-	divContainerCard.appendChild(btnLikedCard);
+		saveSeries(seriesLibraryCloud);
+		recalcularFavoritos();
+	});
+	divSerieCard.appendChild(btnFavorite);
 
-	return divContainerCard;
+	const { liked } = serie;
+	const btnLiked = createLikesButton(liked);
+	btnLiked.addEventListener("click", () => {
+		if (serie.liked) {
+			serie.liked = false;
+			btnLiked.classList.remove("like-activo");
+			divSerieCard.classList.remove("like-activo");
+			btnLiked.textContent = "Like";
+		} else {
+			serie.liked = true;
+			btnLiked.classList.add("like-activo");
+			divSerieCard.classList.add("like-activo");
+			btnLiked.textContent = "Liked";
+		}
+		saveSeries(seriesLibraryCloud);
+		recalcularLikes();
+	});
+
+	divSerieCard.appendChild(btnLiked);
+
+	if (btnLiked.classList.contains("like-activo")) {
+		divSerieCard.classList.add("like-activo");
+	} else {
+		divSerieCard.classList.remove("like-activo");
+	}
+	if (btnFavorite.classList.contains("favorito-activo")) {
+		divSerieCard.classList.add("favorito-activo");
+	} else {
+		divSerieCard.classList.remove("favorito-activo");
+	}
+	saveSeries(seriesLibraryCloud);
+	return divSerieCard;
 };
 
 /**
@@ -224,16 +383,51 @@ const createSerieCard = (serie) => {
  *  Tienes que Implementar todos estos pasos dentro de la función renderCatalogo que está definida aquí:
  */
 const renderCatalogo = (filtroTexto = "") => {
-	const divContenedorCatalogo = document.getElementById("catalogo");
+	// const divContenedorCatalogo = document.getElementById("catalogo");
+	const btnFullLibrary = document.getElementById("btn-full-library");
+	const btnFavotireLibrary = document.getElementById("btn-favorite-library");
+	const btnLikedLibrary = document.getElementById("btn-liked-library");
 	// console.log("El div Contenedor vale => ", divContenedorCatalogo.innerHTML);
 	clearContainer();
 
-	const filteredSeries = filterSeriesByTittle(filtroTexto);
-	filteredSeries.forEach((serie) => {
-		const serieCard = createSerieCard(serie);
-		createEventsCard(serieCard, serie);
-		divContenedorCatalogo.appendChild(serieCard);
-	});
+	if (btnFullLibrary.classList.contains("open-full-library")) {
+		const filteredSeries = filterSeriesByTittle(filtroTexto);
+		filteredSeries.forEach((serie) => {
+			const libraryContainer = document.getElementById("catalogo");
+			const serieCard = createSerieCard(serie);
+			if (serie.favorito) {
+				serieCard.classList.toggle("favorito-activo");
+			}
+
+			libraryContainer.appendChild(serieCard);
+		});
+	}
+
+	if (btnFavotireLibrary.classList.contains("open-favorite-library")) {
+		const filteredSeries = filterSeriesByFavorites();
+		if (filteredSeries) {
+			filteredSeries.forEach((serie) => {
+				const libraryContainer = document.getElementById("catalogo");
+				const serieCard = createSerieCard(serie);
+				serieCard.classList.add("favorito-activo");
+				
+				libraryContainer.appendChild(serieCard);
+			});
+		}
+	}
+
+	if (btnLikedLibrary.classList.contains("open-liked-library")) {
+		const filteredSeries = filterSeriesByLikes();
+		if (filteredSeries) {
+			filteredSeries.forEach((serie) => {
+				const libraryContainer = document.getElementById("catalogo");
+				const serieCard = createSerieCard(serie);
+				serieCard.classList.add("like-activo");
+				
+				libraryContainer.appendChild(serieCard);
+			});
+		}
+	}
 };
 
 /**
@@ -265,6 +459,7 @@ const recalcularLikes = () => {
 
 	spanLikes.textContent = accumulator;
 };
+
 /**
  * 5) EVENTOS PRINCIPALES en DOMContentLoaded
  *
@@ -286,18 +481,26 @@ const recalcularLikes = () => {
  *   - Llamamos a renderCatalogo() (sin filtro) la primera vez
  *   - Llamamos a recalcularFavoritos() y recalcularLikes() para iniciar contadores
  */
-
 document.addEventListener("DOMContentLoaded", () => {
 	createformContainer();
-	const inputBuscar = document.getElementById("input-buscar");
-	const btnBuscar = document.getElementById("btn-buscar");
-	const btnOscuro = document.getElementById("btn-oscuro");
+	createButtonsForSection();
 	const inputAdd = document.getElementById("input-add");
 	const btnAdd = document.getElementById("btn-add");
 
+	const inputBuscar = document.getElementById("input-buscar");
+	const btnBuscar = document.getElementById("btn-buscar");
+	const btnOscuro = document.getElementById("btn-oscuro");
+
+	const btnFullLibrary = document.getElementById("btn-full-library");
+	const btnFavotireLibrary = document.getElementById("btn-favorite-library");
+	const btnLikedLibrary = document.getElementById("btn-liked-library");
+
 	btnAdd.addEventListener("click", () => {
 		addSerieToArray(inputAdd.value);
-	})
+		btnFullLibrary.classList.add("open-full-library");
+		btnFavotireLibrary.classList.remove("open-favorite-library");
+		btnLikedLibrary.classList.remove("open-liked-library");
+	});
 
 	inputBuscar.value = localStorage.getItem("currentSearch");
 	inputBuscar.addEventListener("keyup", () => {
@@ -316,8 +519,29 @@ document.addEventListener("DOMContentLoaded", () => {
 		document.body.classList.toggle("modo-oscuro");
 	});
 
+	btnFullLibrary.addEventListener("click", () => {
+		btnFullLibrary.classList.add("open-full-library");
+		btnFavotireLibrary.classList.remove("open-favorite-library");
+		btnLikedLibrary.classList.remove("open-liked-library");
+		renderCatalogo();
+	});
+
+	btnFavotireLibrary.addEventListener("click", () => {
+		btnFavotireLibrary.classList.add("open-favorite-library");
+		btnFullLibrary.classList.remove("open-full-library");
+		btnLikedLibrary.classList.remove("open-liked-library");
+		renderCatalogo();
+	});
+
+	btnLikedLibrary.addEventListener("click", () => {
+		btnLikedLibrary.classList.add("open-liked-library");
+		btnFullLibrary.classList.remove("open-full-library");
+		btnFavotireLibrary.classList.remove("open-favorite-library");
+		renderCatalogo();
+	});
+
 	if (inputBuscar.value) {
-		renderCatalogo(inputBuscar.value)
+		renderCatalogo(inputBuscar.value);
 	} else {
 		renderCatalogo();
 	}
