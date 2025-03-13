@@ -247,6 +247,14 @@ const filterSeriesByLikes = () => {
 
 // };
 
+// FUNCION PARA CREAR BOTON DE ELIMINAR
+const createButtonForDelete = () => {
+	const btnDelete = document.createElement("button");
+	btnDelete.classList.add("btn-delete");
+	btnDelete.textContent = "X";
+return btnDelete;
+};
+
 // FUNCION PARA CREAR BOTON LIKES
 const createLikesButton = (liked) => {
 	const btnLikes = document.createElement("button");
@@ -280,7 +288,7 @@ const createSerieTittle = (titulo) => {
 };
 
 // FUNCION PARA CREAR TARJETA DE SERIE
-const createSerieCard = (serie) => {
+const createSerieCard = (serie, index) => {
 	const divSerieCard = document.createElement("div");
 	divSerieCard.classList.add("catalog-card");
 	if (serie.favorito) {
@@ -328,9 +336,17 @@ const createSerieCard = (serie) => {
 		saveSeries(seriesLibraryCloud);
 		recalcularLikes();
 	});
-
 	divSerieCard.appendChild(btnLiked);
-
+	
+	const btnDelete = createButtonForDelete();
+	btnDelete.addEventListener("click", () => {
+		seriesLibraryCloud.splice(index, 1);
+		recalcularFavoritos();
+		recalcularLikes();
+		renderCatalogo();
+		saveSeries(seriesLibraryCloud);
+	});
+	divSerieCard.appendChild(btnDelete);
 	if (btnLiked.classList.contains("like-activo")) {
 		divSerieCard.classList.add("like-activo");
 	} else {
@@ -389,12 +405,12 @@ const renderCatalogo = (filtroTexto = "") => {
 	const btnLikedLibrary = document.getElementById("btn-liked-library");
 	// console.log("El div Contenedor vale => ", divContenedorCatalogo.innerHTML);
 	clearContainer();
-
+	
 	if (btnFullLibrary.classList.contains("open-full-library")) {
 		const filteredSeries = filterSeriesByTittle(filtroTexto);
-		filteredSeries.forEach((serie) => {
+		filteredSeries.forEach((serie, index) => {
 			const libraryContainer = document.getElementById("catalogo");
-			const serieCard = createSerieCard(serie);
+			const serieCard = createSerieCard(serie, index);
 			if (serie.favorito) {
 				serieCard.classList.toggle("favorito-activo");
 			}
@@ -406,9 +422,9 @@ const renderCatalogo = (filtroTexto = "") => {
 	if (btnFavotireLibrary.classList.contains("open-favorite-library")) {
 		const filteredSeries = filterSeriesByFavorites();
 		if (filteredSeries) {
-			filteredSeries.forEach((serie) => {
+			filteredSeries.forEach((serie, index) => {
 				const libraryContainer = document.getElementById("catalogo");
-				const serieCard = createSerieCard(serie);
+				const serieCard = createSerieCard(serie, index);
 				serieCard.classList.add("favorito-activo");
 				
 				libraryContainer.appendChild(serieCard);
@@ -419,15 +435,16 @@ const renderCatalogo = (filtroTexto = "") => {
 	if (btnLikedLibrary.classList.contains("open-liked-library")) {
 		const filteredSeries = filterSeriesByLikes();
 		if (filteredSeries) {
-			filteredSeries.forEach((serie) => {
+			filteredSeries.forEach((serie, index) => {
 				const libraryContainer = document.getElementById("catalogo");
-				const serieCard = createSerieCard(serie);
+				const serieCard = createSerieCard(serie, index);
 				serieCard.classList.add("like-activo");
 				
 				libraryContainer.appendChild(serieCard);
 			});
 		}
 	}
+	saveSeries(seriesLibraryCloud);
 };
 
 /**

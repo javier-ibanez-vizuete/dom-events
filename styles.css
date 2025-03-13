@@ -208,6 +208,7 @@ h1 {
      TARJETAS DEL CATÁLOGO
      ------------------------------------------------- */
 .catalog-card {
+
 	background-color: #fff;
 	border: 2px solid #ddd;
 	border-radius: 10px;
@@ -247,7 +248,7 @@ h1 {
 	background-color: #0288d1;
 }
 
-.catalog-card .btn-eliminar {
+.catalog-card .btn-delete {
 	position: absolute;
 	right: 5px;
 	top: 5px;
