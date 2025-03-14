@@ -199,6 +199,33 @@ h1 {
 	background-color: #0288d1;
 }
 
+.catalog-card .btn-watched {
+	display: inline-flex;
+	align-items: center;
+	margin: 5px;
+	padding: 6px 12px;
+	border: 1px solid #d10202;
+	border-radius: 4px;
+	background-color: #ea3232;
+	color: #fff;
+	cursor: pointer;
+	transition: background-color 0.2s, border-color 0.2s;
+}
+
+.catalog-card .btn-watched:hover {
+	background-color: #d10202;
+}
+
+.catalog-card .watched-activo {
+	border: 1px solid #005a05;
+	background-color: #029809;
+}
+
+.catalog-card .watched-activo:hover {
+	background-color: #005404;
+}
+
+
 .catalog-card .btn-delete {
 	position: absolute;
 	right: 5px;

@@ -113,9 +113,16 @@ const createButtonsForSection = () => {
 	const btnLikedLibrary = document.createElement("button");
 	btnLikedLibrary.id = "btn-liked-library";
 	btnLikedLibrary.classList.add("btn");
-
 	btnLikedLibrary.textContent = "Series que me Gustan";
 	divForFilterButtons.appendChild(btnLikedLibrary);
+
+	// BOTON DE SERIES VISTAS ---------------------------------------------
+	const btnWatchedLibrary = Object.assign(document.createElement("button"), {
+		id: "btn-watched-library",
+		className: "btn",
+		textContent: "Series Vistas",
+	});
+	divForFilterButtons.appendChild(btnWatchedLibrary);
 
 	divCounterSection.after(divForFilterButtons);
 };
@@ -200,6 +207,29 @@ const filterSeriesByLikes = () => {
 		return renderCatalogo();
 	}
 	return filteredSeries;
+};
+
+// FUNCION PARA FILTRAR SERIES POR VISTAS (VISTA) -------------------------------------------------------------
+const filterSeriesByWatched = () => {
+	const watchedSeries = seriesLibraryCloud.filter((serie) => serie.watched);
+	const btnFullLibrary = document.getElementById("btn-full-library");
+	const btnWatchedLibrary = document.getElementById("btn-watched-library");
+	if (!watchedSeries.length) {
+		alert("Actualmente no tiene ninguna serie en Series Vistas");
+		btnFullLibrary.classList.add("open-full-library");
+		btnWatchedLibrary.classList.remove("open-full-library");
+		return renderCatalogo();
+	}
+	return watchedSeries;
+};
+
+// FUNCION PARA CREAR BOTON DE VISTA ----------------------
+const createButtonForWatched = (watched) => {
+	const btnWatched = document.createElement("button");
+	btnWatched.classList.add("btn-watched");
+	btnWatched.classList.toggle("watched-activo", watched);
+	btnWatched.textContent = "Vista";
+	return btnWatched;
 };
 
 // FUNCION PARA CREAR BOTON DE ELIMINAR
@@ -302,6 +332,26 @@ const createSerieCard = (serie, index) => {
 		saveSeries(seriesLibraryCloud);
 	});
 	divSerieCard.appendChild(btnDelete);
+
+	//  AÑADIENDO EL BOTON DE VISTO EN LAS TARJETAS ----------------------------------------
+	if (!serie.watched) {
+		serie.watched = false;
+	}
+	const { watched } = serie;
+	const btnWatched = createButtonForWatched(watched);
+	btnWatched.addEventListener("click", () => {
+		if (serie.watched) {
+			serie.watched = false;
+			btnWatched.classList.remove("watched-activo");
+		} else {
+			serie.watched = true;
+			btnWatched.classList.add("watched-activo");
+		}
+		saveSeries(seriesLibraryCloud);
+		recalcularVistas();
+	});
+	divSerieCard.appendChild(btnWatched);
+
 	if (btnLiked.classList.contains("like-activo")) {
 		divSerieCard.classList.add("like-activo");
 	} else {
@@ -358,6 +408,7 @@ const renderCatalogo = (filtroTexto = "") => {
 	const btnFullLibrary = document.getElementById("btn-full-library");
 	const btnFavotireLibrary = document.getElementById("btn-favorite-library");
 	const btnLikedLibrary = document.getElementById("btn-liked-library");
+	const btnWatchedLibrary = document.getElementById("btn-watched-library");
 	// console.log("El div Contenedor vale => ", divContenedorCatalogo.innerHTML);
 	clearContainer();
 
@@ -399,6 +450,18 @@ const renderCatalogo = (filtroTexto = "") => {
 			});
 		}
 	}
+	//  APLICANDO LAS FUNCIONES PARA RENDERIZAR EL CATALOGO CON EL FILTRO DE SERIES VISTAS -------------------------
+	if (btnWatchedLibrary.classList.contains("open-watched-library")) {
+		const watchedSeries = filterSeriesByWatched();
+		if (watchedSeries) {
+			watchedSeries.forEach((serie, index) => {
+				const libraryContainer = document.getElementById("catalogo");
+				const serieCard = createSerieCard(serie, index);
+
+				libraryContainer.appendChild(serieCard);
+			});
+		}
+	}
 	saveSeries(seriesLibraryCloud);
 };
 
@@ -430,6 +493,19 @@ const recalcularLikes = () => {
 	seriesLibraryCloud.forEach((serie) => (serie.liked ? accumulator++ : accumulator));
 
 	spanLikes.textContent = accumulator;
+};
+
+const recalcularVistas = () => {
+	const spanVistas = document.getElementById("total-vistas");
+	
+	const totalVistas = seriesLibraryCloud.reduce((acc, serie) => {
+		if (serie.watched) {
+			acc++
+		}
+		return acc;
+	}, 0);
+
+	spanVistas.textContent = totalVistas;
 };
 
 /**
@@ -470,6 +546,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const btnFullLibrary = document.getElementById("btn-full-library");
 	const btnFavotireLibrary = document.getElementById("btn-favorite-library");
 	const btnLikedLibrary = document.getElementById("btn-liked-library");
+	const btnWatchedLibrary = document.getElementById("btn-watched-library");
 
 	// console.log(JSON.parse(localStorage.getItem("seriesLibrary"))[0]);
 	btnReset.addEventListener("click", (event) => {
@@ -509,6 +586,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		btnFullLibrary.classList.add("open-full-library");
 		btnFavotireLibrary.classList.remove("open-favorite-library");
 		btnLikedLibrary.classList.remove("open-liked-library");
+		btnWatchedLibrary.classList.remove("open-watched-library");
 		renderCatalogo();
 	});
 
@@ -516,6 +594,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		btnFavotireLibrary.classList.add("open-favorite-library");
 		btnFullLibrary.classList.remove("open-full-library");
 		btnLikedLibrary.classList.remove("open-liked-library");
+		btnWatchedLibrary.classList.remove("open-watched-library");
 		renderCatalogo();
 	});
 
@@ -523,8 +602,17 @@ document.addEventListener("DOMContentLoaded", () => {
 		btnLikedLibrary.classList.add("open-liked-library");
 		btnFullLibrary.classList.remove("open-full-library");
 		btnFavotireLibrary.classList.remove("open-favorite-library");
+		btnWatchedLibrary.classList.remove("open-watched-library");
 		renderCatalogo();
 	});
+
+	btnWatchedLibrary.addEventListener("click", () => {
+		btnWatchedLibrary.classList.add("open-watched-library");
+		btnFullLibrary.classList.remove("open-full-library");
+		btnFavotireLibrary.classList.remove("open-favorite-library");
+		btnLikedLibrary.classList.remove("open-liked-library");
+		renderCatalogo();
+	})
 
 	if (inputBuscar.value) {
 		renderCatalogo(inputBuscar.value);
@@ -533,4 +621,5 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 	recalcularFavoritos();
 	recalcularLikes();
+	recalcularVistas();
 });
