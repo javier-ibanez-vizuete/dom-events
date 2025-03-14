@@ -89,6 +89,7 @@ const createButtonForReset = () => {
 };
 
 // FUNCION PARA CREAR EL DIV DE BOTONES!
+
 const createButtonsForSection = () => {
 	const divCounterSection = document.querySelector("div.counters-section");
 
@@ -392,7 +393,7 @@ const renderCatalogo = (filtroTexto = "") => {
 			filteredSeries.forEach((serie, index) => {
 				const libraryContainer = document.getElementById("catalogo");
 				const serieCard = createSerieCard(serie, index);
-				serieCard.classList.add("like-activo");
+				serieCard.classList.add("like-activo", "favorito-activo");
 
 				libraryContainer.appendChild(serieCard);
 			});
