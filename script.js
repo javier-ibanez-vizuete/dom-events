@@ -555,6 +555,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		seriesLibraryCloud = JSON.parse(localStorage.getItem("seriesLibrary"));
 		recalcularFavoritos();
 		recalcularLikes();
+		recalcularVistas();
 		renderCatalogo();
 	});
 
